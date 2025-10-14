@@ -28,4 +28,4 @@ ExportedObj/
 
 docs/Build/*
 docs/TemplateData/*
-!docs/index.html
+!docs/index.html.DS_Store
