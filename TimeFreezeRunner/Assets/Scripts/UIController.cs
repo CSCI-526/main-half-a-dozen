@@ -85,6 +85,10 @@ public class UIController : MonoBehaviour
             ShowIdleToast(msg, 1.2f);
         }
     }
-    public void OnStartClicked()   => GameManager.I?.StartGame();
+    public void OnStartClicked()   
+    {
+        Debug.Log("OnStartClicked called!");
+        GameManager.I?.StartGame();
+    }
     public void OnRestartClicked() => GameManager.I?.Restart();
 }
