@@ -5,6 +5,8 @@ using TMPro;
 
 public class PositionSwitchSystem : MonoBehaviour
 {
+    public static bool IsTargetingGlobal = false;
+
     [Header("References")]
     public Transform player;
     public LayerMask obstacleMask;
@@ -78,7 +80,7 @@ public class PositionSwitchSystem : MonoBehaviour
     float _lastUsableAt = -999f;
 
     void Awake() { SetRing(false, false); }
-    void OnEnable() { SetRing(false, false); _pairCache = null; _pairCacheValidUntil = -999f; _lastUsableAt = -999f; _nextProbeAt = 0f; }
+    void OnEnable() { SetRing(false, false); _pairCache = null; _pairCacheValidUntil = -999f; _lastUsableAt = -999f; _nextProbeAt = 0f; IsTargetingGlobal = false; }
 
     void Start()
     {
@@ -157,6 +159,7 @@ public class PositionSwitchSystem : MonoBehaviour
 
         _sel = 0;
         _targeting = true;
+        IsTargetingGlobal = true;
         SetRing(false, false);
     }
 
@@ -202,7 +205,7 @@ public class PositionSwitchSystem : MonoBehaviour
         if (idx < 0 || idx >= _spots.Length) return;
         Vector3 p = _spots[idx];
 
-        if (Physics2D.OverlapCircle(p, spotCheckRadius, obstacleMask))
+        if (!IsSpotValid(p, minEnemyDistance, minCoinDistance))
         {
             GameManager.I.ui?.ShowIdleToast(noSpotMsg, 0.8f);
             return;
@@ -235,6 +238,7 @@ public class PositionSwitchSystem : MonoBehaviour
     {
         ClearMarkers();
         _targeting = false;
+        IsTargetingGlobal = false;
     }
 
     void SetRing(bool show, bool urgent)
@@ -419,5 +423,6 @@ public class PositionSwitchSystem : MonoBehaviour
     {
         ClearMarkers();
         SetRing(false, false);
+        IsTargetingGlobal = false;
     }
 }
