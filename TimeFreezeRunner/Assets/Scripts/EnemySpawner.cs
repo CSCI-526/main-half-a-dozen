@@ -91,6 +91,7 @@ public class EnemySpawner : MonoBehaviour
 
     // Spawns `count` additional enemies using the same radial/spacing rules.
     // Returns the exact positions used (so caller can remember them for future waves).
+    //New function added
     public List<Vector2> SpawnExtra(int count)
     {
         var created = new List<Vector2>();
