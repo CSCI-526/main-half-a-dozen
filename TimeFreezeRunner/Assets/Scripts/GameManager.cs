@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
     [Header("Enemy Nuke Power")]
     public KeyCode killKey = KeyCode.K;
     public float killDurationSeconds = 5f;
-    public int extraEnemiesPerUse = 4;
+    public int extraEnemiesPerUse = 2;
 
     // Internal state for nuke power
     private bool _nukeBusy = false;
