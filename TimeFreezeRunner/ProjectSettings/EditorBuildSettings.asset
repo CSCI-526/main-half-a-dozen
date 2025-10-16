@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 074aa108253174ee7a0dcb847d1362c1
+  - enabled: 1
+    path: Assets/Scenes/MainForLevel2.unity
+    guid: cf0d45983f6294bff92fe3f183a38ec7
+  - enabled: 1
+    path: Assets/Scenes/Corridor.unity
+    guid: aec7055a83a5e4214918a6d9785443d6
+  - enabled: 1
+    path: Assets/Scenes/Level2_DarkMaze.unity
+    guid: 2620ff90c25904166aa78e0583e216a5
   m_configObjects: {}

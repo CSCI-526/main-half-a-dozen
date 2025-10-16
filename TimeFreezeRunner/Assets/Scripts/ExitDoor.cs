@@ -32,6 +32,9 @@ public class ExitDoor : MonoBehaviour
         {
             Debug.Log("Player Reached Exit");
             GameManager.I?.OnPlayerWin();
+
+            if (LevelManager.I != null && LevelManager.I.currentLevel == 1)
+            LevelManager.I.OnLevelComplete();
         }
     }
 }
