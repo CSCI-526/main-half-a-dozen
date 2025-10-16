@@ -57,11 +57,11 @@ public static void ShowIntro(int level)
             GameManager.I.ui.HideHowTo();
 
         // set text content
-        levelTitle.text = $"LEVEL {level}";
+        levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
         subtitle.text = level == 1
-            ? "Collect all coins and reach the exit"
-            : "Explore the maze, light all beacons and find the key";
-        continueText.text = "Press SPACE to start";
+            ? "Collect <color=yellow><b>all</b></color> coins and reach the exit"
+            : "Explore the maze, light <color=yellow><b>all</b></color> beacons and find the <color=green><b>key</b></color>";
+        continueText.text = "Press <color=blue>SPACE</color> to start";
 
         // fade in
         yield return Fade(1f);

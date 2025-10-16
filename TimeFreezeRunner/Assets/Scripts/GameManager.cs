@@ -371,14 +371,20 @@ else
 
     public void StartGame()
     {
-        Debug.Log("StartGame called!");
-        if (IsPlaying) return;
+        Debug.Log($"StartGame called! IsPlaying: {IsPlaying}");
+        if (IsPlaying) 
+        {
+            Debug.Log("Game is already playing, ignoring StartGame call");
+            return;
+        }
+        Debug.Log("Starting game...");
         IsPlaying = true;
         ui?.HideHowTo();
         ui?.ShowStartHint();
         FreezeAllEnemies(false);
         idleTimer = 0f;
         idleWarnings = 0;
+        Debug.Log("Game started successfully!");
     }
 
     // public void OnCoinCollected()
@@ -505,18 +511,16 @@ public void OnCoinCollected()
         foreach (var e in FindObjectsOfType<EnemyChaser>())
             e.SetFrozenVisual(frozen);
     }
-}
-
-        bool IsUIBlockingInput()
+     bool IsUIBlockingInput()
         {
             // Check if any UI panels are active that should prevent game start
             if (ui != null)
             {
-                // Check if how-to panel is active (this should block input to prevent game start)
+                // Check if how-to panel is active (this should block keyboard input to prevent game start)
                 if (ui.howToPanel != null && ui.howToPanel.activeInHierarchy)
                 {
-                    Debug.Log("How-to panel is active, blocking input to prevent game start");
-                    return true; // Block input when how-to panel is active
+                    Debug.Log("How-to panel is active, blocking keyboard input to prevent game start");
+                    return true; // Block keyboard input when how-to panel is active
                 }
                 
                 // Check if win/lose panels are active
@@ -541,3 +545,5 @@ public void OnCoinCollected()
             return false;
         }
 }
+
+    
