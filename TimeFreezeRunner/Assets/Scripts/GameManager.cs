@@ -340,7 +340,9 @@ else
 
         if (IsPlaying)
         {
-            if (!IsPlayerMoving)
+            bool switching = PositionSwitchSystem.IsTargetingGlobal;
+
+            if (!IsPlayerMoving && !switching)
             {
                 idleTimer += Time.deltaTime;
                 if (idleTimer >= idleThreshold)
