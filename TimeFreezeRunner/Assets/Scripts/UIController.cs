@@ -129,6 +129,11 @@ public class UIController : MonoBehaviour
     }
 
     public void OnStartClicked() => GameManager.I?.StartGame();
+    public void OnStartClicked()   
+    {
+        Debug.Log("OnStartClicked called!");
+        GameManager.I?.StartGame();
+    }
     public void OnRestartClicked() => GameManager.I?.Restart();
 
     // ✅ Play Again logic — resets full game from Level 1

@@ -331,7 +331,8 @@ else
         if (UILevelPanel.IsIntroVisible)
             return;
 
-        if (!IsPlaying && (Input.GetKeyDown(KeyCode.Space) ||
+        // Only respond to input if no UI panels are blocking interaction
+        if (!IsPlaying && !IsUIBlockingInput() && (Input.GetKeyDown(KeyCode.Space) ||
                            Input.GetKeyDown(KeyCode.Return) ||
                            Input.GetMouseButtonDown(0)))
         {
@@ -370,6 +371,7 @@ else
 
     public void StartGame()
     {
+        Debug.Log("StartGame called!");
         if (IsPlaying) return;
         IsPlaying = true;
         ui?.HideHowTo();
@@ -503,4 +505,39 @@ public void OnCoinCollected()
         foreach (var e in FindObjectsOfType<EnemyChaser>())
             e.SetFrozenVisual(frozen);
     }
+}
+
+        bool IsUIBlockingInput()
+        {
+            // Check if any UI panels are active that should prevent game start
+            if (ui != null)
+            {
+                // Check if how-to panel is active (this should block input to prevent game start)
+                if (ui.howToPanel != null && ui.howToPanel.activeInHierarchy)
+                {
+                    Debug.Log("How-to panel is active, blocking input to prevent game start");
+                    return true; // Block input when how-to panel is active
+                }
+                
+                // Check if win/lose panels are active
+                if ((ui.winPanel != null && ui.winPanel.activeInHierarchy) ||
+                    (ui.losePanel != null && ui.losePanel.activeInHierarchy))
+                {
+                    Debug.Log("Win/Lose panel is active, blocking input");
+                    return true; // Block input when game is over
+                }
+            }
+            
+            // Check if player perks panel is active (this should block game start)
+            var panelSwitcher = FindObjectOfType<PanelSwitcher>();
+            if (panelSwitcher != null && panelSwitcher.playerPerksPanel != null && 
+                panelSwitcher.playerPerksPanel.activeInHierarchy)
+            {
+                Debug.Log("Player perks panel is active, blocking input");
+                return true; // Block input when perks panel is showing
+            }
+            
+            Debug.Log("No UI blocking input");
+            return false;
+        }
 }
