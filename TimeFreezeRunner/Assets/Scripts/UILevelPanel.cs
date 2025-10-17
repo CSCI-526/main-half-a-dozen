@@ -28,13 +28,40 @@ public class UILevelPanel : MonoBehaviour
     }
 
     // 🔸 Show Intro Panel
+// public static void ShowIntro(int level)
+// {
+//     if (I == null) return;
+//     if (!I.gameObject.activeInHierarchy)
+//         I.gameObject.SetActive(true);  // 🟢 ensures it's active
+//     I.StartCoroutine(I.ShowIntroRoutine(level));
+// }
 public static void ShowIntro(int level)
 {
     if (I == null) return;
+
+    // Prefer the active scene to decide the level (prevents stale LevelManager state)
+    string sceneName = SceneManager.GetActiveScene().name;
+    int lvl = level;
+
+    // Heuristics: if this is your Level 1 scene, force lvl = 1
+    if (!string.IsNullOrEmpty(sceneName) &&
+        (sceneName == "Main" || sceneName.Contains("Level1") || sceneName == "MainForLevel1"))
+    {
+        lvl = 1;
+    }
+    else if (LevelManager.I != null)
+    {
+        // Otherwise prefer LevelManager if present
+        lvl = Mathf.Max(1, LevelManager.I.currentLevel);
+    }
+
     if (!I.gameObject.activeInHierarchy)
-        I.gameObject.SetActive(true);  // 🟢 ensures it's active
-    I.StartCoroutine(I.ShowIntroRoutine(level));
+        I.gameObject.SetActive(true);
+
+    I.StopAllCoroutines();                // ensure no stale coroutine
+    I.StartCoroutine(I.ShowIntroRoutine(lvl));
 }
+
 
     // 🔸 Show Level Complete Panel
     public static void ShowComplete(int level)
