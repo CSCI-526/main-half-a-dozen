@@ -973,4 +973,5 @@ public class GameManager : MonoBehaviour
                 ch.player = player.transform;
         }
     }
+
 }
