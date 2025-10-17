@@ -57,10 +57,30 @@ public static void ShowIntro(int level)
             GameManager.I.ui.HideHowTo();
 
         // set text content
-        levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
+        /* levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
         subtitle.text = level == 1
             ? "Collect <color=yellow><b>all</b></color> coins and reach the exit"
             : "Explore the maze, light <color=yellow><b>all</b></color> beacons and find the <color=green><b>key</b></color>";
+        continueText.text = "Press <color=blue>SPACE</color> to start"; */
+        // set text content
+        levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
+
+        if (level == 1)
+        {
+            subtitle.text = "Collect <color=yellow><b>all</b></color> coins and reach the exit";
+        }
+        else if (level == 2)
+        {
+            subtitle.text = "Explore the maze, light <color=yellow><b>all</b></color> beacons and find the <color=green><b>key</b></color>";
+        }
+        else if (level == 3)
+        {
+            subtitle.text =
+                "<color=red><b>Enemy Wipe Activated!</b></color>\n" +
+                "Press <color=yellow><b>K</b></color> to vanish all enemies for 5 seconds — " +
+                "but beware, they will <color=orange><b>multiply</b></color> afterward.";
+        }
+
         continueText.text = "Press <color=blue>SPACE</color> to start";
 
         // fade in

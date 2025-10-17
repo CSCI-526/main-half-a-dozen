@@ -603,6 +603,8 @@ MonoBehaviour:
   idleFailPanel: {fileID: 0}
   idleFailText: {fileID: 0}
   playAgainButton: {fileID: 481736772}
+  howToNextButton: {fileID: 0}
+  perksStartButton: {fileID: 0}
 --- !u!1 &136715076
 GameObject:
   m_ObjectHideFlags: 0
@@ -2681,6 +2683,12 @@ MonoBehaviour:
   totalCoins: 0
   coinsCollected: 0
   idleThreshold: 3
+  enableNukePower: 0
+  killKey: 107
+  killDurationSeconds: 5
+  extraEnemiesPerUse: 2
+  nukeCooldownSeconds: 0
+  maxNukeUses: 2
 --- !u!4 &508777320
 Transform:
   m_ObjectHideFlags: 0
@@ -6244,7 +6252,7 @@ MonoBehaviour:
     : Coins -> collect all.\n\u2022 <color=#FF4D4D>Red</color> : Enemies -> they
     move only when <b>you</b> move.\n\u2022 <color=#3DA5FF>Blue</color> : You.\n\u2022
     Collect all coins to unlock the <b>EXIT</b>. \n\u2022 Touch enemy -> <b>Lose</b>.
-    \n"
+    \n<color=#FF4D4D>Tip: If your mind stalls, tap anywhere once. The maze listens.</color>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7206,6 +7214,8 @@ MonoBehaviour:
     m_Bits: 8
   checkRadius: 0.5
   maxPlacementTries: 25
+  arenaCollider: {fileID: 0}
+  arenaPadding: 0.75
 --- !u!4 &1675704610
 Transform:
   m_ObjectHideFlags: 0
