@@ -49,40 +49,6 @@ public bool allLevelsCompleted = false;
     // ---------------------------------------------------------
     // 🚀 Transition to the next main level
     // ---------------------------------------------------------
-// public System.Collections.IEnumerator LoadNextLevelAfterDelay(float delay)
-// {
-//     yield return new WaitForSeconds(delay);
-
-//     string nextScene = "";
-//     int nextLevel = currentLevel + 1;
-
-//     if (currentLevel == 1)
-//         nextScene = "MainForLevel2";
-//     else if (currentLevel == 2)
-//     {
-//         nextScene = "MainForLevel3";
-//         allLevelsCompleted = true; // ✅ mark all levels done
-//     }
-//     else
-//     {
-//         Debug.Log("🎉 All levels finished!");
-//         yield break;
-//     }
-
-//     Debug.Log($"➡️ Loading next scene: {nextScene}");
-//     SceneManager.sceneLoaded += (scene, mode) =>
-//     {
-//         currentLevel = nextLevel;
-//         Debug.Log($"✅ Scene '{scene.name}' loaded → Now Level {currentLevel}");
-//     };
-
-//     if (currentLevel == 2 && savedState != null)
-//     {
-//         savedState.coinsCollected = 0;
-//         savedState.allCoinsCollected = false;
-//     }
-//     SceneManager.LoadScene(nextScene);
-// }
 public System.Collections.IEnumerator LoadNextLevelAfterDelay(float delay)
 {
     yield return new WaitForSeconds(delay);

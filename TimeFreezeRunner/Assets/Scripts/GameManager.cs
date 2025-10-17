@@ -1,5 +1,3 @@
-// LEVEL 3 TESTING CODE
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -221,49 +219,6 @@ public class GameManager : MonoBehaviour
         idleWarnings = 0;
         Debug.Log("Game started successfully!");
     }
-
-    // public void OnCoinCollected()
-    // {
-    //     coinsCollected++;
-    //     ui?.SetCoin(totalCoins, coinsCollected);
-
-    //     // 🔹 Save live progress
-    //     if (LevelManager.I != null)
-    //         LevelManager.I.savedState.coinsCollected = coinsCollected;
-
-    //     // Stop if not all coins yet
-    //     if (coinsCollected < totalCoins) return;
-
-    //     // ✅ Mark all coins collected — ensures coins won’t reappear
-    //     if (LevelManager.I != null)
-    //         LevelManager.I.savedState.allCoinsCollected = true;
-
-    //     // ✅ LEVEL 1 — normal unlock
-    //     if (LevelManager.I != null && LevelManager.I.currentLevel == 1)
-    //     {
-    //         exitDoor?.ActivateExit(true);
-    //         ui?.ShowExitHint();
-    //         Debug.Log("✅ Level 1: Exit door unlocked!");
-    //         return;
-    //     }
-
-    //     // ✅ LEVEL 2 — corridor trigger unlock, door still locked
-    //     if (LevelManager.I != null && LevelManager.I.currentLevel == 2)
-    //     {
-    //         var corridorTrigger = FindObjectOfType<SceneTransition>();
-    //         if (corridorTrigger != null)
-    //         {
-    //             corridorTrigger.gameObject.SetActive(true);
-
-    //             // optional visual pulse
-    //             var sr = corridorTrigger.GetComponent<SpriteRenderer>();
-    //             if (sr != null) StartCoroutine(PulseColor(sr));
-    //         }
-
-    //         ui?.ShowIdleToast("🔍 Explore the right-side passage!");
-    //         Debug.Log("🟡 Level 2: Corridor trigger unlocked — door stays locked until key!");
-    //     }
-    // }
 
     public void OnCoinCollected()
 {

@@ -27,14 +27,6 @@ public class UILevelPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // 🔸 Show Intro Panel
-// public static void ShowIntro(int level)
-// {
-//     if (I == null) return;
-//     if (!I.gameObject.activeInHierarchy)
-//         I.gameObject.SetActive(true);  // 🟢 ensures it's active
-//     I.StartCoroutine(I.ShowIntroRoutine(level));
-// }
 public static void ShowIntro(int level)
 {
     if (I == null) return;
@@ -82,13 +74,6 @@ public static void ShowIntro(int level)
         // Hide "How Not To Lose" panel if it's showing
         if (GameManager.I != null && GameManager.I.ui != null)
             GameManager.I.ui.HideHowTo();
-
-        // set text content
-        /* levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
-        subtitle.text = level == 1
-            ? "Collect <color=yellow><b>all</b></color> coins and reach the exit"
-            : "Explore the maze, light <color=yellow><b>all</b></color> beacons and find the <color=green><b>key</b></color>";
-        continueText.text = "Press <color=blue>SPACE</color> to start"; */
         // set text content
         levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
 
