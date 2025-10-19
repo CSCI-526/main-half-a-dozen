@@ -5523,6 +5523,8 @@ MonoBehaviour:
   markerPrefab: {fileID: 5567474720391831715, guid: e038f2d857b2148bca26692919c32d2d, type: 3}
   ringCalm: {fileID: 1871945171}
   ringUrgent: {fileID: 412385289}
+  levelBounds: {fileID: 1811485440}
+  boundsPadding: 0.25
   triggerRadius: 4.5
   dangerRadius: 2.5
   cooldownSeconds: 0
@@ -5548,14 +5550,11 @@ MonoBehaviour:
   relaxEnemyDistanceStep: 0.15
   activateKey: 32
   noSpotMsg: No safe switch!
-  notAvailableMsg: No position switch available!
-  noChargesMsg: No switches remaining!
+  noChargesMsg: Maxed out position swicthes!
   switchesText: {fileID: 0}
   switchesFormat: 'Switches: {0}/{1}'
   maxSwitches: 2
-  probeInterval: 0.08
   pairCacheTTL: 0.3
-  ringHoldSeconds: 0.25
 --- !u!4 &1137882637
 Transform:
   m_ObjectHideFlags: 0

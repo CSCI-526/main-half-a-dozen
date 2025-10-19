@@ -463,6 +463,8 @@ MonoBehaviour:
   idleFailPanel: {fileID: 0}
   idleFailText: {fileID: 0}
   playAgainButton: {fileID: 0}
+  howToNextButton: {fileID: 0}
+  perksStartButton: {fileID: 0}
 --- !u!1 &136715076
 GameObject:
   m_ObjectHideFlags: 0
@@ -5460,90 +5462,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 252655908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1137882635
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1137882637}
-  - component: {fileID: 1137882636}
-  m_Layer: 0
-  m_Name: PositionSwitchSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1137882636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1137882635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69fd266f713c84e20890c8a2735bf538, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1610740092}
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 8
-  markerPrefab: {fileID: 5567474720391831715, guid: e038f2d857b2148bca26692919c32d2d, type: 3}
-  ringCalm: {fileID: 1871945171}
-  ringUrgent: {fileID: 412385289}
-  triggerRadius: 4.5
-  dangerRadius: 2.5
-  cooldownSeconds: 0
-  sampleRadii:
-  - 4
-  - 5.25
-  sampleDirections: 12
-  jitterPerDirection: 2
-  radialJitter: 0.35
-  angularJitterDeg: 6
-  minEnemyDistance: 1.4
-  spotCheckRadius: 0.45
-  requireLineOfSight: 1
-  minCoinDistance: 1.5
-  minSpotSeparation: 5
-  pairSeparationWeight: 3
-  pairPoolSize: 48
-  enemyDensityRadius: 4
-  enemyDensityWeight: 2
-  expandAttempts: 3
-  expandRadiusStep: 1.25
-  expandDirectionsStep: 4
-  relaxEnemyDistanceStep: 0.15
-  activateKey: 32
-  noSpotMsg: No safe switch!
-  notAvailableMsg: No position switch available!
-  noChargesMsg: No switches remaining!
-  switchesText: {fileID: 0}
-  switchesFormat: 'Switches: {0}/{1}'
-  maxSwitches: 2
-  probeInterval: 0.08
-  pairCacheTTL: 0.3
-  ringHoldSeconds: 0.25
---- !u!4 &1137882637
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1137882635}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1151544438
 GameObject:
   m_ObjectHideFlags: 0
@@ -10112,7 +10030,6 @@ SceneRoots:
   - {fileID: 252655908}
   - {fileID: 727212825}
   - {fileID: 1811485441}
-  - {fileID: 1137882637}
   - {fileID: 1151544439}
   - {fileID: 631321502}
   - {fileID: 1059275617}
