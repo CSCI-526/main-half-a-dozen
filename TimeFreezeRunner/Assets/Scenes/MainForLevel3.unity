@@ -2294,8 +2294,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.5122, y: 16.8443}
-  m_SizeDelta: {x: 722.5222, y: 250.1621}
+  m_AnchoredPosition: {x: 55.7214, y: 27}
+  m_SizeDelta: {x: 749.9092, y: 314.0646}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &340569152
 MonoBehaviour:
@@ -2317,14 +2317,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'You Have <color=yellow>Conquered</color>!\n
+  m_text: 'You Have <color=yellow>Conquered!</color>\n
 
     All levels <color=red>Complete</color>\n
 
     Victory
     is yours!\n
 
-    Click on <color=blue>Play Again</color> to start from Level
+    Click on <color=green>Play Again</color> to start from Level
     1!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5518,6 +5518,7 @@ MonoBehaviour:
     lastScene: 
     nextScene: 
     allCoinsCollected: 0
+  canReturnToLevel2: 0
 --- !u!4 &1286228971
 Transform:
   m_ObjectHideFlags: 0
