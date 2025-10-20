@@ -131,7 +131,7 @@ else
             if (!returning)
             {
                 // For Main scene (Level 1), show howToPanel first instead of Level 1 panel
-                string sceneName = SceneManager.GetActiveScene().name;
+                // string sceneName = SceneManager.GetActiveScene().name;
                 if (sceneName == "Main")
                 {
                     ui?.ShowHowTo(true);
