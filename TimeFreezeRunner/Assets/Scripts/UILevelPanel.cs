@@ -79,18 +79,24 @@ public static void ShowIntro(int level)
 
         if (level == 1)
         {
-            subtitle.text = "Collect <color=yellow><b>all</b></color> coins and reach the exit";
+            subtitle.text = 
+                "• Collect <color=yellow>all Coins</color>\n" +
+                "• Reach <color=red>EXIT</color>\n" +
+                "• Press <color=yellow>Space</color> to <color=yellow>Teleport</color>\n" +
+                "• Press <color=blue>1</color> or <color=blue>2</color> to pick teleport spot";
         }
         else if (level == 2)
         {
-            subtitle.text = "Explore the maze, light <color=yellow><b>all</b></color> beacons and find the <color=green><b>key</b></color>";
+            subtitle.text = 
+                "• Collect <color=yellow>all Coins</color>\n" +
+                "• Enter the <color=blue>Blue Door</color>";
         }
         else if (level == 3)
         {
-            subtitle.text =
-                "<color=red><b>Enemy Wipe Activated!</b></color>\n" +
-                "Press <color=yellow><b>K</b></color> to vanish all enemies for 5 seconds — " +
-                "but beware, they will <color=orange><b>multiply</b></color> afterward.";
+            subtitle.text = 
+                "• <color=red>Enemy Wipe Activated!</color>\n" +
+                "• Press <color=blue>K</color> to <color=blue>Clear</color> enemies for 5s\n" +
+                "• But beware, they'll <color=yellow>Multiply</color> after!";
         }
 
         continueText.text = "Press <color=blue>SPACE</color> to start";
@@ -107,10 +113,19 @@ public static void ShowIntro(int level)
         gameObject.SetActive(false);
         IsIntroVisible = false;
 
-        // show "How Not To Lose" after level intro ends
+        // show "How Not To Lose" after level intro ends (except for Main scene Level 1)
         if (GameManager.I != null && GameManager.I.ui != null)
         {
-            GameManager.I.ui.ShowHowTo(true);
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (sceneName != "Main" || level != 1)
+            {
+                GameManager.I.ui.ShowHowTo(true);
+            }
+            else
+            {
+                // For Main scene Level 1, start the game directly without showing howToPanel
+                GameManager.I.StartGame();
+            }
         }
     }
 

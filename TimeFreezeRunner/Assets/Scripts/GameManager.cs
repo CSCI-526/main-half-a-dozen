@@ -38,8 +38,10 @@ public class GameManager : MonoBehaviour
     bool _nukeBusy = false;
     float _nukeReadyAt = 0f;
     List<Vector2> _baselineEnemyPositions = new List<Vector2>();
+    List<Vector2> _baselineCoinPositions = new List<Vector2>();
     EnemySpawner _spawner;
     GameObject _enemyTemplateHiddenClone;
+    GameObject _coinTemplateHiddenClone;
 
     
 
@@ -116,7 +118,17 @@ public class GameManager : MonoBehaviour
 
             if (!returning)
             {
-                UILevelPanel.ShowIntro(LevelManager.I.currentLevel);
+                // For Main scene (Level 1), show howToPanel first instead of Level 1 panel
+                string sceneName = SceneManager.GetActiveScene().name;
+                if (sceneName == "Main")
+                {
+                    ui?.ShowHowTo(true);
+                    Debug.Log("📋 Main scene: Showing howToPanel first");
+                }
+                else
+                {
+                    UILevelPanel.ShowIntro(LevelManager.I.currentLevel);
+                }
             }
             else
             {
@@ -324,6 +336,52 @@ public class GameManager : MonoBehaviour
         foreach (var e in FindObjectsOfType<EnemyChaser>())
             e.SetFrozenVisual(frozen);
     }
+    
+    // Reset enemies to their original positions
+    public void ResetEnemiesToOriginalPositions()
+    {
+        var enemies = FindObjectsOfType<EnemyChaser>();
+        
+        // If we have baseline positions, reset enemies to those positions
+        if (_baselineEnemyPositions.Count > 0 && enemies.Length > 0)
+        {
+            for (int i = 0; i < enemies.Length && i < _baselineEnemyPositions.Count; i++)
+            {
+                if (enemies[i] != null)
+                {
+                    enemies[i].transform.position = _baselineEnemyPositions[i];
+                }
+            }
+        }
+        
+        // Freeze enemies after resetting positions
+        FreezeAllEnemies(true);
+    }
+    
+    // Reset coins to their original positions
+    public void ResetCoinsToOriginalPositions()
+    {
+        // Destroy all existing coins
+        var existingCoins = FindObjectsOfType<Coin>();
+        foreach (var coin in existingCoins)
+        {
+            if (coin != null) Destroy(coin.gameObject);
+        }
+        
+        // Recreate coins at their original positions
+        if (_baselineCoinPositions.Count > 0 && _coinTemplateHiddenClone != null)
+        {
+            for (int i = 0; i < _baselineCoinPositions.Count; i++)
+            {
+                var coin = Instantiate(_coinTemplateHiddenClone, _baselineCoinPositions[i], Quaternion.identity);
+                coin.name = "Coin";
+                coin.SetActive(true);
+            }
+        }
+        
+        // Update total coins count
+        totalCoins = _baselineCoinPositions.Count;
+    }
     bool IsUIBlockingInput()
         {
             // Check if any UI panels are active that should prevent game start
@@ -345,15 +403,6 @@ public class GameManager : MonoBehaviour
                 }
             }
             
-            // Check if player perks panel is active (this should block game start)
-            var panelSwitcher = FindObjectOfType<PanelSwitcher>();
-            if (panelSwitcher != null && panelSwitcher.playerPerksPanel != null && 
-                panelSwitcher.playerPerksPanel.activeInHierarchy)
-            {
-                Debug.Log("Player perks panel is active, blocking input");
-                return true; // Block input when perks panel is showing
-            }
-            
             Debug.Log("No UI blocking input");
             return false;
         }
@@ -366,10 +415,15 @@ public class GameManager : MonoBehaviour
         yield return null;
 
         _baselineEnemyPositions.Clear();
+        _baselineCoinPositions.Clear();
 
         var enemies = FindObjectsOfType<EnemyChaser>();
         for (int i = 0; i < enemies.Length; i++)
             if (enemies[i]) _baselineEnemyPositions.Add(enemies[i].transform.position);
+
+        var coins = FindObjectsOfType<Coin>();
+        for (int i = 0; i < coins.Length; i++)
+            if (coins[i]) _baselineCoinPositions.Add(coins[i].transform.position);
 
         // Fallback template: keep a hidden clone to instantiate if spawner lacks helpers.
         if (enemies.Length > 0 && enemies[0] != null && _enemyTemplateHiddenClone == null)
@@ -378,6 +432,15 @@ public class GameManager : MonoBehaviour
             _enemyTemplateHiddenClone.name = "[EnemyTemplate_Hidden]";
             _enemyTemplateHiddenClone.SetActive(false);
             _enemyTemplateHiddenClone.hideFlags = HideFlags.HideInHierarchy;
+        }
+        
+        // Fallback template: keep a hidden clone for coins
+        if (coins.Length > 0 && coins[0] != null && _coinTemplateHiddenClone == null)
+        {
+            _coinTemplateHiddenClone = Instantiate(coins[0].gameObject);
+            _coinTemplateHiddenClone.name = "[CoinTemplate_Hidden]";
+            _coinTemplateHiddenClone.SetActive(false);
+            _coinTemplateHiddenClone.hideFlags = HideFlags.HideInHierarchy;
         }
     }
 
