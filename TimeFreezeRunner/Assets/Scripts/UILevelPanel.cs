@@ -121,7 +121,7 @@ public static void ShowIntro(int level)
                 "• But beware, they'll <color=yellow>Multiply</color> after!";
         }
 
-        continueText.text = "Press <color=blue>SPACE</color> or <color=blue>ENTER</color> to start";
+        continueText.text = "Press <color=blue>ENTER</color> to start";
 
         // fade in
         Debug.Log($"[UILevelPanel.ShowIntroRoutine] Starting fade in, CanvasGroup alpha: {cg.alpha}");
@@ -161,7 +161,7 @@ public static void ShowIntro(int level)
         gameObject.SetActive(true);
         levelTitle.text = $"LEVEL {level} COMPLETE!";
         subtitle.text = "Well done!";
-        continueText.text = "Press SPACE or ENTER to continue";
+        continueText.text = "Press ENTER to continue";
 
         yield return Fade(1f);
 
