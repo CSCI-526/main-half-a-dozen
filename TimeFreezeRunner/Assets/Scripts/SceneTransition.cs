@@ -41,26 +41,62 @@ public class SceneTransition : MonoBehaviour
                 GameManager.I.ui.ShowIdleToast("🔓 Cyan Door Unlocked — Proceed to the Corridor!", 2.5f);
         }
     }
-    
-    private void OnTriggerEnter2D(Collider2D other)
-{
-    if (other.CompareTag("Player"))
-    {
-        // ✅ Only enforce coin requirement in Level 2
-        string sceneName = SceneManager.GetActiveScene().name;
-        bool requireCoins = sceneName == "MainForLevel2";
 
-        if (requireCoins && !isUnlocked)
+    //     private void OnTriggerEnter2D(Collider2D other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         // ✅ Only enforce coin requirement in Level 2
+    //         string sceneName = SceneManager.GetActiveScene().name;
+    //         bool requireCoins = sceneName == "MainForLevel2";
+
+    //         if (requireCoins && !isUnlocked)
+    //         {
+    //             Debug.Log("❌ Door locked — collect all coins first!");
+    //             if (GameManager.I != null && GameManager.I.ui != null)
+    //                 GameManager.I.ui.ShowIdleToast("Collect all coins to unlock the Cyan Door!", 2f);
+    //             return;
+    //         }
+
+    //         Debug.Log($"✅ Transition triggered → Loading {targetScene}");
+    //         StartCoroutine(LoadScene());
+    //     }
+    // }
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (!other.CompareTag("Player")) return;
+
+    string currentScene = SceneManager.GetActiveScene().name;
+    string next = targetScene;
+
+    if (currentScene == "Corridor")
+    {
+        // Block returning left until key collected
+        if (next == "MainForLevel2" && !LevelManager.I.canReturnToLevel2)
         {
-            Debug.Log("❌ Door locked — collect all coins first!");
-            if (GameManager.I != null && GameManager.I.ui != null)
-                GameManager.I.ui.ShowIdleToast("Collect all coins to unlock the Cyan Door!", 2f);
+            Debug.Log("❌ Cannot return to Level 2 yet — key not collected!");
+            GameManager.I?.ui?.ShowIdleToast("Find the key in the Dark Maze first!", 2f);
             return;
         }
 
-        Debug.Log($"✅ Transition triggered → Loading {targetScene}");
-        StartCoroutine(LoadScene());
+        // Block re-entering Dark Maze after key collected
+        if (next == "Level2_DarkMaze" && LevelManager.I.darkMazeCleared)
+        {
+            Debug.Log("🚫 Dark Maze sealed after key collection!");
+            GameManager.I?.ui?.ShowIdleToast("Dark Maze is sealed after collecting the key!", 2f);
+            return;
+        }
     }
+
+    if (currentScene == "MainForLevel2" && !isUnlocked)
+    {
+        Debug.Log("❌ Door locked — collect all coins first!");
+        GameManager.I?.ui?.ShowIdleToast("Collect all coins to unlock the Cyan Door!", 2f);
+        return;
+    }
+
+    Debug.Log($"✅ Transition triggered → Loading {targetScene}");
+    StartCoroutine(LoadScene());
 }
 
     private System.Collections.IEnumerator LoadScene()

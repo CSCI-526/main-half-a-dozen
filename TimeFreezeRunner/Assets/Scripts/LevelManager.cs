@@ -6,7 +6,7 @@ public class LevelManager : MonoBehaviour
     public static LevelManager I;
 
     [Header("Completion Flags")]
-public bool allLevelsCompleted = false;
+    public bool allLevelsCompleted = false;
 
     [Header("Progress Tracking")]
     public int currentLevel = 1;
@@ -49,55 +49,63 @@ public bool allLevelsCompleted = false;
     // ---------------------------------------------------------
     // 🚀 Transition to the next main level
     // ---------------------------------------------------------
-public System.Collections.IEnumerator LoadNextLevelAfterDelay(float delay)
-{
-    yield return new WaitForSeconds(delay);
-
-    string nextScene = "";
-    int nextLevel = currentLevel + 1;
-
-    if (currentLevel == 1)
-        nextScene = "MainForLevel2";
-    else if (currentLevel == 2)
+    public System.Collections.IEnumerator LoadNextLevelAfterDelay(float delay)
     {
-        nextScene = "MainForLevel3";
-        allLevelsCompleted = true; // ✅ mark all levels done
+        yield return new WaitForSeconds(delay);
+
+        string nextScene = "";
+        int nextLevel = currentLevel + 1;
+
+        if (currentLevel == 1)
+            nextScene = "MainForLevel2";
+        else if (currentLevel == 2)
+        {
+            nextScene = "MainForLevel3";
+            allLevelsCompleted = true; // ✅ mark all levels done
+        }
+        else
+        {
+            Debug.Log("🎉 All levels finished!");
+            yield break;
+        }
+
+        // ✅ HARD RULE: when advancing from Level 2 → Level 3,
+        // start coins at 0 and make sure the door is initially LOCKED on the next level.
+        if (currentLevel == 2 && savedState != null)
+        {
+            savedState.coinsCollected = 0;
+            savedState.allCoinsCollected = false;
+            savedState.exitUnlocked = false;   // ensures GameManager won't re-open it on restore
+            savedState.lastScene = "";      // not a side-scene return
+            savedState.nextScene = "";
+        }
+
+        Debug.Log($"➡️ Loading next scene: {nextScene}");
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            currentLevel = nextLevel;
+            Debug.Log($"✅ Scene '{scene.name}' loaded → Now Level {currentLevel}");
+        };
+
+        SceneManager.LoadScene(nextScene);
     }
-    else
-    {
-        Debug.Log("🎉 All levels finished!");
-        yield break;
-    }
-
-    // ✅ HARD RULE: when advancing from Level 2 → Level 3,
-    // start coins at 0 and make sure the door is initially LOCKED on the next level.
-    if (currentLevel == 2 && savedState != null)
-    {
-        savedState.coinsCollected    = 0;
-        savedState.allCoinsCollected = false;
-        savedState.exitUnlocked      = false;   // ensures GameManager won't re-open it on restore
-        savedState.lastScene         = "";      // not a side-scene return
-        savedState.nextScene         = "";
-    }
-
-    Debug.Log($"➡️ Loading next scene: {nextScene}");
-    SceneManager.sceneLoaded += (scene, mode) =>
-    {
-        currentLevel = nextLevel;
-        Debug.Log($"✅ Scene '{scene.name}' loaded → Now Level {currentLevel}");
-    };
-
-    SceneManager.LoadScene(nextScene);
-}
 
     // ---------------------------------------------------------
     // 🌟 Called from Dark Maze when the player finds the key
     // ---------------------------------------------------------
-    public void MarkDarkMazeCleared()
-    {
-        darkMazeCleared = true;
-        Debug.Log("🌟 Dark Maze cleared! Player can now exit.");
-    }
+    // public void MarkDarkMazeCleared()
+    // {
+    //     darkMazeCleared = true;
+    //     Debug.Log("🌟 Dark Maze cleared! Player can now exit.");
+    // }
+    public bool canReturnToLevel2 = false;
+
+public void MarkDarkMazeCleared()
+{
+    darkMazeCleared = true;
+    canReturnToLevel2 = true;
+    Debug.Log("🌟 Dark Maze cleared! Corridor updated.");
+}
 
     // ---------------------------------------------------------
     // 💾 Save & Restore Player State between scenes
@@ -124,4 +132,6 @@ public System.Collections.IEnumerator LoadNextLevelAfterDelay(float delay)
 
         Debug.Log($"🔁 Restored player state → pos: {savedState.position}, coins: {savedState.coinsCollected}");
     }
+    
+    
 }

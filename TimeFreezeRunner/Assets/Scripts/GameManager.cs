@@ -53,8 +53,20 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        totalCoins = FindObjectsOfType<Coin>().Length;
-        ui?.SetCoin(totalCoins, coinsCollected);
+        // totalCoins = FindObjectsOfType<Coin>().Length;
+        // ui?.SetCoin(totalCoins, coinsCollected);
+        // 🔹 Hide coins counter completely in Dark Maze
+string sceneName = SceneManager.GetActiveScene().name;
+if (sceneName == "Level2_DarkMaze")
+{
+    if (ui != null && ui.coinText != null)
+        ui.coinText.gameObject.SetActive(false);
+}
+else
+{
+    totalCoins = FindObjectsOfType<Coin>().Length;
+    ui?.SetCoin(totalCoins, coinsCollected);
+}
         if (exitDoor) exitDoor.ActivateExit(false);
 
         FreezeAllEnemies(true);

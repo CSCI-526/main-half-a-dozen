@@ -14,6 +14,7 @@ public class BeaconLightController : MonoBehaviour
         {
             Debug.Log("Beacon activated!:" + name);
             activated = true;
+            FindObjectOfType<BulbCounter>()?.IncrementBulbCount();
             StartCoroutine(FadeInLight());
         }
     }
