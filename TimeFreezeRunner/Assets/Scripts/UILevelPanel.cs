@@ -29,7 +29,14 @@ public class UILevelPanel : MonoBehaviour
 
 public static void ShowIntro(int level)
 {
-    if (I == null) return;
+    Debug.Log($"[UILevelPanel.ShowIntro] Called with level: {level}");
+    Debug.Log($"[UILevelPanel.ShowIntro] UILevelPanel.I is null: {I == null}");
+    
+    if (I == null) 
+    {
+        Debug.LogWarning("[UILevelPanel.ShowIntro] UILevelPanel.I is null - cannot show intro!");
+        return;
+    }
 
     // Prefer the active scene to decide the level (prevents stale LevelManager state)
     string sceneName = SceneManager.GetActiveScene().name;
@@ -67,9 +74,11 @@ public static void ShowIntro(int level)
     // ---------------------------------------------------------
         private System.Collections.IEnumerator ShowIntroRoutine(int level)
     {
-        Debug.Log($"[UILevelPanel] Showing Level Intro for Level {level}");
+        Debug.Log($"[UILevelPanel.ShowIntroRoutine] Starting for Level {level}");
+        Debug.Log($"[UILevelPanel.ShowIntroRoutine] Scene name: {SceneManager.GetActiveScene().name}");
         IsIntroVisible = true;
         gameObject.SetActive(true);
+        Debug.Log($"[UILevelPanel.ShowIntroRoutine] GameObject activated, activeInHierarchy: {gameObject.activeInHierarchy}");
 
         // Hide "How Not To Lose" panel if it's showing
         if (GameManager.I != null && GameManager.I.ui != null)
@@ -87,9 +96,22 @@ public static void ShowIntro(int level)
         }
         else if (level == 2)
         {
-            subtitle.text = 
-                "• Collect <color=yellow>all Coins</color>\n" +
-                "• Enter the <color=blue>Blue Door</color>";
+            // Check if we're in the dark maze scene
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (sceneName == "Level2_DarkMaze")
+            {
+                levelTitle.text = $"<color=red><b>DARK MAZE</b></color>";
+                subtitle.text = 
+                    
+                    "• Light up all the <color=yellow>bulbs</color>\n" +
+                    "• Search for the <color=green>Key</color>";
+            }
+            else
+            {
+                subtitle.text = 
+                    "• Collect <color=yellow>all Coins</color>\n" +
+                    "• Enter the <color=blue>Blue Door</color>";
+            }
         }
         else if (level == 3)
         {
@@ -99,13 +121,15 @@ public static void ShowIntro(int level)
                 "• But beware, they'll <color=yellow>Multiply</color> after!";
         }
 
-        continueText.text = "Press <color=blue>SPACE</color> to start";
+        continueText.text = "Press <color=blue>SPACE</color> or <color=blue>ENTER</color> to start";
 
         // fade in
+        Debug.Log($"[UILevelPanel.ShowIntroRoutine] Starting fade in, CanvasGroup alpha: {cg.alpha}");
         yield return Fade(1f);
+        Debug.Log($"[UILevelPanel.ShowIntroRoutine] Fade in complete, CanvasGroup alpha: {cg.alpha}");
 
         // wait for input
-        while (!Input.GetKeyDown(KeyCode.Space))
+        while (!Input.GetKeyDown(KeyCode.Space) && !Input.GetKeyDown(KeyCode.Return))
             yield return null;
 
         // fade out intro panel
@@ -137,11 +161,11 @@ public static void ShowIntro(int level)
         gameObject.SetActive(true);
         levelTitle.text = $"LEVEL {level} COMPLETE!";
         subtitle.text = "Well done!";
-        continueText.text = "Press SPACE to continue";
+        continueText.text = "Press SPACE or ENTER to continue";
 
         yield return Fade(1f);
 
-        while (!Input.GetKeyDown(KeyCode.Space))
+        while (!Input.GetKeyDown(KeyCode.Space) && !Input.GetKeyDown(KeyCode.Return))
             yield return null;
 
         yield return Fade(0f);
@@ -157,6 +181,7 @@ public static void ShowIntro(int level)
     // ---------------------------------------------------------
     private System.Collections.IEnumerator Fade(float target)
     {
+        Debug.Log($"[UILevelPanel.Fade] Starting fade to target: {target}, current alpha: {cg.alpha}");
         float t = 0f;
         float start = cg.alpha;
         while (t < fadeInTime)
@@ -166,5 +191,6 @@ public static void ShowIntro(int level)
             yield return null;
         }
         cg.alpha = target;
+        Debug.Log($"[UILevelPanel.Fade] Fade complete, final alpha: {cg.alpha}");
     }
 }

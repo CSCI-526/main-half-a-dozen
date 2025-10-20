@@ -125,6 +125,13 @@ public class GameManager : MonoBehaviour
                     ui?.ShowHowTo(true);
                     Debug.Log("📋 Main scene: Showing howToPanel first");
                 }
+                else if (sceneName == "Level2_DarkMaze")
+                {
+                    // For Dark Maze, show level panel with dark maze instructions
+                    Debug.Log("🌑 Dark Maze scene detected - calling UILevelPanel.ShowIntro(2)");
+                    Debug.Log($"UILevelPanel.I is null: {UILevelPanel.I == null}");
+                    UILevelPanel.ShowIntro(2); // Show as Level 2
+                }
                 else
                 {
                     UILevelPanel.ShowIntro(LevelManager.I.currentLevel);
