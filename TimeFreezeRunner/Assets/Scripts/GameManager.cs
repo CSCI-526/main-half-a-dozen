@@ -43,6 +43,10 @@ public class GameManager : MonoBehaviour
     GameObject _enemyTemplateHiddenClone;
     GameObject _coinTemplateHiddenClone;
 
+    // Track intro visibility last frame
+    bool _wasIntroVisible = false;
+
+
     
 
     void Awake()
@@ -171,6 +175,9 @@ else
         // 🔸 Cache spawner (if present) and capture baseline next frame
         _spawner = FindObjectOfType<EnemySpawner>();
         StartCoroutine(CaptureInitialEnemyPositionsEndOfFrame());
+
+        _wasIntroVisible = UILevelPanel.IsIntroVisible;
+
     }
 
     void Update()
@@ -178,16 +185,48 @@ else
         if (Input.GetKeyDown(KeyCode.R))
             Restart();
 
-        // Prevent starting while intro is visible
-        if (UILevelPanel.IsIntroVisible)
-            return;
+        // Detect intro → gameplay edge for Level 3
+    // bool nowIntro = UILevelPanel.IsIntroVisible;
+    // if (_wasIntroVisible && !nowIntro &&
+    //     LevelManager.I != null && LevelManager.I.currentLevel == 3 &&
+    //     !IsPlaying)
+    // {
+    //     StartGame();
+    // }
+    // _wasIntroVisible = nowIntro;
 
-        if (!IsPlaying && !IsUIBlockingInput() && (Input.GetKeyDown(KeyCode.Space) ||
-                           Input.GetKeyDown(KeyCode.Return) ||
-                           Input.GetMouseButtonDown(0)))
+    // // Prevent starting while intro is visible
+    // if (nowIntro)
+    //     return;
+
+    // if (!IsPlaying && !IsUIBlockingInput() && (Input.GetKeyDown(KeyCode.Space) ||
+    //                    Input.GetKeyDown(KeyCode.Return) ||
+    //                    Input.GetMouseButtonDown(0)))
+    // {
+    //     StartGame();
+    // }
+    // Detect intro → gameplay edge (all levels)
+// When the level intro panel just hid, auto-start immediately.
+        bool nowIntro = UILevelPanel.IsIntroVisible;
+        if (_wasIntroVisible && !nowIntro && !IsPlaying && !IsUIBlockingInput())
         {
             StartGame();
         }
+        _wasIntroVisible = nowIntro;
+
+        // Prevent starting while intro is visible
+        if (nowIntro)
+            return;
+
+        // Manual start fallback (Space/Enter/Click)
+        if (!IsPlaying && !IsUIBlockingInput() &&
+            (Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetMouseButtonDown(0)))
+        {
+            StartGame();
+        }
+
 
         if (IsPlaying)
         {
