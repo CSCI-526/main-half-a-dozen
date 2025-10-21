@@ -510,7 +510,7 @@ else
 
         // track and display usage
         currentNukeUses++;
-        ui?.ShowIdleToast($"Enemy Wipe {currentNukeUses}/{maxNukeUses} used");
+        ui?.ShowIdleToast($"{currentNukeUses}/{maxNukeUses} enemy wipe used - enemies gone for {killDurationSeconds:0}s");
 
         _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
 
@@ -519,7 +519,7 @@ else
         for (int i = 0; i < enemies.Length; i++)
             if (enemies[i]) Destroy(enemies[i].gameObject);
 
-        ui?.ShowIdleToast($"Enemies gone for {killDurationSeconds:0}s…");
+        // ui?.ShowIdleToast($"Enemies gone for {killDurationSeconds:0}s…");
 
         // 2) Wait safe window
         float t = 0f;
