@@ -490,6 +490,13 @@ public class PositionSwitchSystem : MonoBehaviour
         if (switchesText) switchesText.text = string.Format(switchesFormat, maxSwitches - _switchesUsed, maxSwitches);
     }
 
+    // Reset position switch chances to maximum (for try again functionality)
+    public void ResetPositionSwitchChances()
+    {
+        _switchesUsed = 0;
+        UpdateSwitchesUI();
+    }
+
     // ===== LABELS =====
     // Create/update a centered TextMeshPro label on a marker (shows "1" or "2")
     void AttachMarkerLabel(GameObject marker, string text)

@@ -208,6 +208,13 @@ public class UIController : MonoBehaviour
                 // Reset enemies to original positions and freeze them
                 GameManager.I.ResetEnemiesToOriginalPositions();
                 
+                // Reset position switch chances to 2
+                var positionSwitchSystem = FindObjectOfType<PositionSwitchSystem>();
+                if (positionSwitchSystem != null)
+                {
+                    positionSwitchSystem.ResetPositionSwitchChances();
+                }
+                
                 // Update UI
                 GameManager.I.ui?.SetCoin(GameManager.I.totalCoins, 0);
                 
