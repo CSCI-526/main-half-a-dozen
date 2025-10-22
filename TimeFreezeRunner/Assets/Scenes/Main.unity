@@ -3137,6 +3137,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587584842}
   m_CullTransparentMesh: 1
+--- !u!1 &618543688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 618543691}
+  - component: {fileID: 618543690}
+  - component: {fileID: 618543689}
+  m_Layer: 0
+  m_Name: AnalyticsRouter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &618543689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618543688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f56b29d74ac684a73991c9a7b900e82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  formActionUrl: https://docs.google.com/forms/u/0/d/e/1FAIpQLSegCxO1VOf_OC5kX453WwUF0-o0unVoqzfKudGNQ-V52AYmRw/formResponse
+  ts: entry.176765317
+  sessionId: entry.326046602
+  level: entry.909627180
+  eventType: entry.148349950
+  result: entry.1217396183
+  attemptIndex: entry.223776661
+  secondsElapsed: entry.1541212500
+  enabledSending: 1
+  verbose: 1
+  minIntervalSeconds: 0.05
+--- !u!114 &618543690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618543688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b81040f5af36547d899444cc3aa900dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sender: {fileID: 618543689}
+  resetAttemptsOnSuccess: 1
+  sendInEditor: 1
+--- !u!4 &618543691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618543688}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &625668572
 GameObject:
   m_ObjectHideFlags: 0
@@ -4594,6 +4665,7 @@ MonoBehaviour:
     lastScene: 
     nextScene: 
     allCoinsCollected: 0
+  canReturnToLevel2: 0
 --- !u!4 &1286228971
 Transform:
   m_ObjectHideFlags: 0
@@ -8812,3 +8884,4 @@ SceneRoots:
   - {fileID: 1811485441}
   - {fileID: 1137882637}
   - {fileID: 1286228971}
+  - {fileID: 618543691}
