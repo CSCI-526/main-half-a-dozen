@@ -88,11 +88,12 @@ public static void ShowIntro(int level)
 
         if (level == 1)
         {
-            subtitle.text = 
+            subtitle.text =
                 "Collect <color=yellow>all Coins</color>\n" +
                 "Reach <color=red>EXIT</color>\n" +
                 "Press <color=yellow>Space</color> to <color=yellow>Teleport</color>\n" +
-                "Press keys - <color=orange>1</color> or <color=orange>2</color> to pick teleport spot";
+                "Press keys - <color=orange>1</color> or <color=orange>2</color> to pick teleport spot\n" +
+                "<color=yellow>Limited to 2, choose smart.</color>";
         }
         else if (level == 2)
         {
@@ -108,15 +109,16 @@ public static void ShowIntro(int level)
             }
             else
             {
-                subtitle.text = 
+                subtitle.text =
                     "Collect <color=yellow>all Coins</color>\n" +
-                    "Enter the <color=orange>Blue Door</color>";
+                    "Enter the <color=orange>Blue Door</color>\n" +
+                    "Telport Available!";
             }
         }
         else if (level == 3)
         {
             subtitle.text = 
-                "<color=red>Enemy Wipe Activated!</color>\n" +
+                "<color=red>Enemy Wipe Activated!</color> You have 2 uses, spend them wisely.\n" +
                 "Press <color=orange>K</color> to <color=orange>Clear</color> enemies for 5s\n" +
                 "But beware, they'll <color=yellow>Multiply</color> after!";
         }
