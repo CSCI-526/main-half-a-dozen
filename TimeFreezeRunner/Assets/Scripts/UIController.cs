@@ -28,7 +28,6 @@ public class UIController : MonoBehaviour
 
     // Optional: if you want to assign specific buttons in Inspector, you can.
     [SerializeField] private Button howToNextButton;     // Level 3: Next on How-To
-    [SerializeField] private Button perksStartButton;    // Level 3: Start Game on Perks
 
     void Start()
     {
@@ -41,15 +40,15 @@ public class UIController : MonoBehaviour
         if (idleFailPanel) idleFailPanel.SetActive(false);
         if (playAgainButton) playAgainButton.gameObject.SetActive(false);
 
-        SetupLevel3TwoStepFlow(); // safe no-op on other levels
+        SetupLevel3Flow(); // safe no-op on other levels
     }
 
-    // ========== Level 3: How-To → Next → Player Perks → Start Game ==========
-    void SetupLevel3TwoStepFlow()
+    // ========== Level 3: How-To → Start Game ==========
+    void SetupLevel3Flow()
     {
         if (LevelManager.I == null || LevelManager.I.currentLevel != 3) return;
 
-        // 1) Wire the "Next" button on the How-To panel → open Player Perks
+        // Wire the "Next" button on the How-To panel → start game directly
         if (howToNextButton == null && howToPanel != null)
         {
             // Prefer a specifically named child; otherwise use the first Button under howToPanel
@@ -66,31 +65,6 @@ public class UIController : MonoBehaviour
         {
             Debug.Log("UIController (L3): No How-To Next button found. (Name it 'NextButton' or assign in Inspector.)");
         }
-
-        // 2) Wire the "Start Game" button on the Player Perks panel
-        var ps = FindObjectOfType<PanelSwitcher>();
-        if (ps != null && ps.playerPerksPanel != null)
-        {
-            if (perksStartButton == null)
-                perksStartButton = FindChildButton(ps.playerPerksPanel.transform, "StartGameButton");
-
-            if (perksStartButton == null)
-                perksStartButton = ps.playerPerksPanel.GetComponentInChildren<Button>(true);
-
-            if (perksStartButton != null)
-            {
-                perksStartButton.onClick.RemoveAllListeners();
-                perksStartButton.onClick.AddListener(OnPerksStartClicked);
-            }
-            else
-            {
-                Debug.Log("UIController (L3): No Start Game button found in Player Perks. (Name it 'StartGameButton' or assign in Inspector.)");
-            }
-        }
-        else
-        {
-            Debug.Log("UIController (L3): PanelSwitcher or playerPerksPanel not found in scene.");
-        }
     }
 
     Button FindChildButton(Transform parent, string childName)
@@ -103,27 +77,8 @@ public class UIController : MonoBehaviour
     // Called by Level 3 How-To "Next" button
     public void OnHowToNextClicked()
     {
-        // Close How-To, open Perks
+        // Close How-To and start game directly
         if (howToPanel) howToPanel.SetActive(false);
-
-        var ps = FindObjectOfType<PanelSwitcher>();
-        if (ps != null && ps.playerPerksPanel != null)
-        {
-            ps.playerPerksPanel.SetActive(true);
-        }
-        else
-        {
-            Debug.LogWarning("UIController: Could not open Player Perks (PanelSwitcher/playerPerksPanel missing).");
-        }
-    }
-
-    // Called by Level 3 Perks "Start Game" button
-    public void OnPerksStartClicked()
-    {
-        var ps = FindObjectOfType<PanelSwitcher>();
-        if (ps != null && ps.playerPerksPanel != null)
-            ps.playerPerksPanel.SetActive(false);
-
         GameManager.I?.StartGame();
     }
 
@@ -164,7 +119,7 @@ public class UIController : MonoBehaviour
         if (howToPanel) howToPanel.SetActive(on);
 
         // Re-hook Level 3 flow whenever How-To is shown
-        if (on) SetupLevel3TwoStepFlow();
+        if (on) SetupLevel3Flow();
     }
 
     public void HideHowTo()
@@ -222,7 +177,67 @@ public class UIController : MonoBehaviour
 
     // Inspector-friendly handlers (still valid for Level 1 flow)
     public void OnStartClicked() => GameManager.I?.StartGame();
-    public void OnRestartClicked() => GameManager.I?.Restart();
+    public void OnRestartClicked() 
+    {
+        // For Level 1, go directly to Level 1 panel instead of restarting scene
+        if (LevelManager.I != null && LevelManager.I.currentLevel == 1)
+        {
+            if (losePanel) losePanel.SetActive(false);
+            
+            // Reset game state for fresh start
+            if (LevelManager.I != null)
+            {
+                LevelManager.I.ResetProgress();
+                LevelManager.I.currentLevel = 1;
+            }
+            
+            if (GameManager.I != null)
+            {
+                // Reset GameManager state
+                GameManager.I.coinsCollected = 0;
+                
+                // Reset player position to starting position
+                if (GameManager.I.player != null)
+                {
+                    GameManager.I.player.transform.position = Vector3.zero;
+                }
+                
+                // Reset coins to original positions
+                GameManager.I.ResetCoinsToOriginalPositions();
+                
+                // Reset enemies to original positions and freeze them
+                GameManager.I.ResetEnemiesToOriginalPositions();
+                
+                // Reset position switch chances to 2
+                var positionSwitchSystem = FindObjectOfType<PositionSwitchSystem>();
+                if (positionSwitchSystem != null)
+                {
+                    positionSwitchSystem.ResetPositionSwitchChances();
+                }
+                
+                // Update UI
+                GameManager.I.ui?.SetCoin(GameManager.I.totalCoins, 0);
+                
+                // Reset exit door
+                if (GameManager.I.exitDoor != null)
+                    GameManager.I.exitDoor.ActivateExit(false);
+            }
+            
+            UILevelPanel.ShowIntro(1);
+        }
+        else
+        {
+            // For other levels, restart the scene as usual
+            GameManager.I?.Restart();
+        }
+    }
+    
+    // Show Level 1 panel after howToPanel Next button click
+    public void OnHowToNextShowLevel1()
+    {
+        if (howToPanel) howToPanel.SetActive(false);
+        UILevelPanel.ShowIntro(1);
+    }
 
     // ✅ Play Again logic — resets full game from Level 1
     public void OnPlayAgainClicked()

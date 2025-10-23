@@ -38,10 +38,13 @@ public class GameManager : MonoBehaviour
     bool _nukeBusy = false;
     float _nukeReadyAt = 0f;
     List<Vector2> _baselineEnemyPositions = new List<Vector2>();
+    List<Vector2> _baselineCoinPositions = new List<Vector2>();
     EnemySpawner _spawner;
     GameObject _enemyTemplateHiddenClone;
+    GameObject _coinTemplateHiddenClone;
 
-    
+    // Track intro visibility last frame
+    bool _wasIntroVisible = false;
 
     void Awake()
     {
@@ -51,8 +54,20 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        totalCoins = FindObjectsOfType<Coin>().Length;
-        ui?.SetCoin(totalCoins, coinsCollected);
+        // totalCoins = FindObjectsOfType<Coin>().Length;
+        // ui?.SetCoin(totalCoins, coinsCollected);
+        // 🔹 Hide coins counter completely in Dark Maze
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "Level2_DarkMaze")
+        {
+            if (ui != null && ui.coinText != null)
+                ui.coinText.gameObject.SetActive(false);
+        }
+        else
+        {
+            totalCoins = FindObjectsOfType<Coin>().Length;
+            ui?.SetCoin(totalCoins, coinsCollected);
+        }
         if (exitDoor) exitDoor.ActivateExit(false);
 
         FreezeAllEnemies(true);
@@ -116,7 +131,23 @@ public class GameManager : MonoBehaviour
 
             if (!returning)
             {
-                UILevelPanel.ShowIntro(LevelManager.I.currentLevel);
+                // For Main scene (Level 1), show howToPanel first instead of Level 1 panel
+                if (sceneName == "Main")
+                {
+                    ui?.ShowHowTo(true);
+                    Debug.Log("📋 Main scene: Showing howToPanel first");
+                }
+                else if (sceneName == "Level2_DarkMaze")
+                {
+                    // For Dark Maze, show level panel with dark maze instructions
+                    Debug.Log("🌑 Dark Maze scene detected - calling UILevelPanel.ShowIntro(2)");
+                    Debug.Log($"UILevelPanel.I is null: {UILevelPanel.I == null}");
+                    UILevelPanel.ShowIntro(2); // Show as Level 2
+                }
+                else
+                {
+                    UILevelPanel.ShowIntro(LevelManager.I.currentLevel);
+                }
             }
             else
             {
@@ -140,6 +171,8 @@ public class GameManager : MonoBehaviour
         // 🔸 Cache spawner (if present) and capture baseline next frame
         _spawner = FindObjectOfType<EnemySpawner>();
         StartCoroutine(CaptureInitialEnemyPositionsEndOfFrame());
+
+        _wasIntroVisible = UILevelPanel.IsIntroVisible;
     }
 
     void Update()
@@ -147,13 +180,24 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             Restart();
 
+        // Detect intro → gameplay edge (all levels)
+        // When the level intro panel just hid, auto-start immediately.
+        bool nowIntro = UILevelPanel.IsIntroVisible;
+        if (_wasIntroVisible && !nowIntro && !IsPlaying && !IsUIBlockingInput())
+        {
+            StartGame();
+        }
+        _wasIntroVisible = nowIntro;
+
         // Prevent starting while intro is visible
-        if (UILevelPanel.IsIntroVisible)
+        if (nowIntro)
             return;
 
-        if (!IsPlaying && !IsUIBlockingInput() && (Input.GetKeyDown(KeyCode.Space) ||
-                           Input.GetKeyDown(KeyCode.Return) ||
-                           Input.GetMouseButtonDown(0)))
+        // Manual start fallback (Space/Enter/Click)
+        if (!IsPlaying && !IsUIBlockingInput() &&
+            (Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetMouseButtonDown(0)))
         {
             StartGame();
         }
@@ -170,13 +214,13 @@ public class GameManager : MonoBehaviour
                     if (idleWarnings == 0)
                     {
                         idleWarnings = 1;
-                        ui?.ShowIdleToast("Oops—thinking a bit long! Keep moving. (1/2)");
+                        ui?.ShowIdleToast("Oops. Thinking a bit long! Keep moving. (1/2)");
                         idleTimer = 0f;
                     }
                     else
                     {
                         IsPlaying = false;
-                        ui?.ShowIdleFail("Stopped twice too long—restarting…");
+                        ui?.ShowIdleFail("Stopped twice too long, restarting…");
                         StartCoroutine(RestartAfter(1.25f));
                     }
                 }
@@ -217,62 +261,65 @@ public class GameManager : MonoBehaviour
         FreezeAllEnemies(false);
         idleTimer = 0f;
         idleWarnings = 0;
+
+        // === ANALYTICS: mark the start of an attempt (non-intrusive) ===
+        RunAttemptTracker.I?.StartAttempt();
+
         Debug.Log("Game started successfully!");
     }
 
     public void OnCoinCollected()
-{
-    coinsCollected++;
-    ui?.SetCoin(totalCoins, coinsCollected);
-
-    // 🔹 Save live progress
-    if (LevelManager.I != null)
-        LevelManager.I.savedState.coinsCollected = coinsCollected;
-
-    // Stop if not all coins yet
-    if (coinsCollected < totalCoins) return;
-
-    // ✅ Mark all coins collected — ensures coins won’t reappear
-    if (LevelManager.I != null)
-        LevelManager.I.savedState.allCoinsCollected = true;
-
-    // ✅ LEVEL 1 — normal unlock
-    if (LevelManager.I != null && LevelManager.I.currentLevel == 1)
     {
-        exitDoor?.ActivateExit(true);
-        ui?.ShowExitHint();
-        Debug.Log("✅ Level 1: Exit door unlocked!");
-        return;
-    }
+        coinsCollected++;
+        ui?.SetCoin(totalCoins, coinsCollected);
 
-    // ✅ LEVEL 2 — corridor trigger unlock, door still locked
-    if (LevelManager.I != null && LevelManager.I.currentLevel == 2)
-    {
-        var corridorTrigger = FindObjectOfType<SceneTransition>();
-        if (corridorTrigger != null)
+        // 🔹 Save live progress
+        if (LevelManager.I != null)
+            LevelManager.I.savedState.coinsCollected = coinsCollected;
+
+        // Stop if not all coins yet
+        if (coinsCollected < totalCoins) return;
+
+        // ✅ Mark all coins collected — ensures coins won’t reappear
+        if (LevelManager.I != null)
+            LevelManager.I.savedState.allCoinsCollected = true;
+
+        // ✅ LEVEL 1 — normal unlock
+        if (LevelManager.I != null && LevelManager.I.currentLevel == 1)
         {
-            corridorTrigger.gameObject.SetActive(true);
-
-            // optional visual pulse
-            var sr = corridorTrigger.GetComponent<SpriteRenderer>();
-            if (sr != null) StartCoroutine(PulseColor(sr));
+            exitDoor?.ActivateExit(true);
+            ui?.ShowExitHint();
+            Debug.Log("✅ Level 1: Exit door unlocked!");
+            return;
         }
 
-        ui?.ShowIdleToast("🔍 Explore the right-side passage!");
-        Debug.Log("🟡 Level 2: Corridor trigger unlocked — door stays locked until key!");
-        return;
-    }
+        // ✅ LEVEL 2 — corridor trigger unlock, door still locked
+        if (LevelManager.I != null && LevelManager.I.currentLevel == 2)
+        {
+            var corridorTrigger = FindObjectOfType<SceneTransition>();
+            if (corridorTrigger != null)
+            {
+                corridorTrigger.gameObject.SetActive(true);
 
-    // ✅ LEVEL 3 — unlock exit ONLY after all coins are collected
-    if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
-    {
-        exitDoor?.ActivateExit(true);
-        ui?.ShowExitHint();
-        Debug.Log("✅ Level 3: Exit door unlocked!");
-        return;
-    }
-}
+                // optional visual pulse
+                var sr = corridorTrigger.GetComponent<SpriteRenderer>();
+                if (sr != null) StartCoroutine(PulseColor(sr));
+            }
 
+            ui?.ShowIdleToast("🔍 Explore the right-side passage!");
+            Debug.Log("🟡 Level 2: Corridor trigger unlocked — door stays locked until key!");
+            return;
+        }
+
+        // ✅ LEVEL 3 — unlock exit ONLY after all coins are collected
+        if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
+        {
+            exitDoor?.ActivateExit(true);
+            ui?.ShowExitHint();
+            Debug.Log("✅ Level 3: Exit door unlocked!");
+            return;
+        }
+    }
 
     IEnumerator PulseColor(SpriteRenderer sr)
     {
@@ -290,6 +337,10 @@ public class GameManager : MonoBehaviour
     {
         if (!IsPlaying) return;
         IsPlaying = false;
+
+        // === ANALYTICS: log a failed run end (before any restart) ===
+        RunAttemptTracker.I?.LogRunEndFail();
+
         player?.OnLose();
         ui?.ShowLose();
         FreezeAllEnemies(true);
@@ -299,6 +350,10 @@ public class GameManager : MonoBehaviour
     {
         if (!IsPlaying) return;
         IsPlaying = false;
+
+        // === ANALYTICS: log a successful run end (before level transition) ===
+        RunAttemptTracker.I?.LogRunEndSuccess();
+
         player?.OnWin();
         ui?.ShowWin();
         FreezeAllEnemies(true);
@@ -324,39 +379,77 @@ public class GameManager : MonoBehaviour
         foreach (var e in FindObjectsOfType<EnemyChaser>())
             e.SetFrozenVisual(frozen);
     }
-    bool IsUIBlockingInput()
+    
+    // Reset enemies to their original positions
+    public void ResetEnemiesToOriginalPositions()
+    {
+        var enemies = FindObjectsOfType<EnemyChaser>();
+        
+        // If we have baseline positions, reset enemies to those positions
+        if (_baselineEnemyPositions.Count > 0 && enemies.Length > 0)
         {
-            // Check if any UI panels are active that should prevent game start
-            if (ui != null)
+            for (int i = 0; i < enemies.Length && i < _baselineEnemyPositions.Count; i++)
             {
-                // Check if how-to panel is active (this should block keyboard input to prevent game start)
-                if (ui.howToPanel != null && ui.howToPanel.activeInHierarchy)
+                if (enemies[i] != null)
                 {
-                    Debug.Log("How-to panel is active, blocking keyboard input to prevent game start");
-                    return true; // Block keyboard input when how-to panel is active
-                }
-                
-                // Check if win/lose panels are active
-                if ((ui.winPanel != null && ui.winPanel.activeInHierarchy) ||
-                    (ui.losePanel != null && ui.losePanel.activeInHierarchy))
-                {
-                    Debug.Log("Win/Lose panel is active, blocking input");
-                    return true; // Block input when game is over
+                    enemies[i].transform.position = _baselineEnemyPositions[i];
                 }
             }
-            
-            // Check if player perks panel is active (this should block game start)
-            var panelSwitcher = FindObjectOfType<PanelSwitcher>();
-            if (panelSwitcher != null && panelSwitcher.playerPerksPanel != null && 
-                panelSwitcher.playerPerksPanel.activeInHierarchy)
-            {
-                Debug.Log("Player perks panel is active, blocking input");
-                return true; // Block input when perks panel is showing
-            }
-            
-            Debug.Log("No UI blocking input");
-            return false;
         }
+        
+        // Freeze enemies after resetting positions
+        FreezeAllEnemies(true);
+    }
+    
+    // Reset coins to their original positions
+    public void ResetCoinsToOriginalPositions()
+    {
+        // Destroy all existing coins
+        var existingCoins = FindObjectsOfType<Coin>();
+        foreach (var coin in existingCoins)
+        {
+            if (coin != null) Destroy(coin.gameObject);
+        }
+        
+        // Recreate coins at their original positions
+        if (_baselineCoinPositions.Count > 0 && _coinTemplateHiddenClone != null)
+        {
+            for (int i = 0; i < _baselineCoinPositions.Count; i++)
+            {
+                var coin = Instantiate(_coinTemplateHiddenClone, _baselineCoinPositions[i], Quaternion.identity);
+                coin.name = "Coin";
+                coin.SetActive(true);
+            }
+        }
+        
+        // Update total coins count
+        totalCoins = _baselineCoinPositions.Count;
+    }
+
+    bool IsUIBlockingInput()
+    {
+        // Check if any UI panels are active that should prevent game start
+        if (ui != null)
+        {
+            // Check if how-to panel is active (this should block keyboard input to prevent game start)
+            if (ui.howToPanel != null && ui.howToPanel.activeInHierarchy)
+            {
+                Debug.Log("How-to panel is active, blocking keyboard input to prevent game start");
+                return true; // Block keyboard input when how-to panel is active
+            }
+            
+            // Check if win/lose panels are active
+            if ((ui.winPanel != null && ui.winPanel.activeInHierarchy) ||
+                (ui.losePanel != null && ui.losePanel.activeInHierarchy))
+            {
+                Debug.Log("Win/Lose panel is active, blocking input");
+                return true; // Block input when game is over
+            }
+        }
+        
+        Debug.Log("No UI blocking input");
+        return false;
+    }
 
     // ===================== Level 3 Nuke Power (impl) =====================
 
@@ -366,10 +459,15 @@ public class GameManager : MonoBehaviour
         yield return null;
 
         _baselineEnemyPositions.Clear();
+        _baselineCoinPositions.Clear();
 
         var enemies = FindObjectsOfType<EnemyChaser>();
         for (int i = 0; i < enemies.Length; i++)
             if (enemies[i]) _baselineEnemyPositions.Add(enemies[i].transform.position);
+
+        var coins = FindObjectsOfType<Coin>();
+        for (int i = 0; i < coins.Length; i++)
+            if (coins[i]) _baselineCoinPositions.Add(coins[i].transform.position);
 
         // Fallback template: keep a hidden clone to instantiate if spawner lacks helpers.
         if (enemies.Length > 0 && enemies[0] != null && _enemyTemplateHiddenClone == null)
@@ -378,6 +476,15 @@ public class GameManager : MonoBehaviour
             _enemyTemplateHiddenClone.name = "[EnemyTemplate_Hidden]";
             _enemyTemplateHiddenClone.SetActive(false);
             _enemyTemplateHiddenClone.hideFlags = HideFlags.HideInHierarchy;
+        }
+        
+        // Fallback template: keep a hidden clone for coins
+        if (coins.Length > 0 && coins[0] != null && _coinTemplateHiddenClone == null)
+        {
+            _coinTemplateHiddenClone = Instantiate(coins[0].gameObject);
+            _coinTemplateHiddenClone.name = "[CoinTemplate_Hidden]";
+            _coinTemplateHiddenClone.SetActive(false);
+            _coinTemplateHiddenClone.hideFlags = HideFlags.HideInHierarchy;
         }
     }
 
@@ -389,7 +496,7 @@ public class GameManager : MonoBehaviour
 
         // track and display usage
         currentNukeUses++;
-        ui?.ShowIdleToast($"Enemy Wipe {currentNukeUses}/{maxNukeUses} used");
+        ui?.ShowIdleToast($"{currentNukeUses}/{maxNukeUses} enemy wipe used - enemies gone for {killDurationSeconds:0}s");
 
         _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
 
@@ -397,8 +504,6 @@ public class GameManager : MonoBehaviour
         var enemies = FindObjectsOfType<EnemyChaser>();
         for (int i = 0; i < enemies.Length; i++)
             if (enemies[i]) Destroy(enemies[i].gameObject);
-
-        ui?.ShowIdleToast($"Enemies gone for {killDurationSeconds:0}s…");
 
         // 2) Wait safe window
         float t = 0f;
@@ -511,5 +616,4 @@ public class GameManager : MonoBehaviour
                 ch.player = player.transform;
         }
     }
-
 }
