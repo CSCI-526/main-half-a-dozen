@@ -214,13 +214,13 @@ public class GameManager : MonoBehaviour
                     if (idleWarnings == 0)
                     {
                         idleWarnings = 1;
-                        ui?.ShowIdleToast("Oops—thinking a bit long! Keep moving. (1/2)");
+                        ui?.ShowIdleToast("Oops. Thinking a bit long! Keep moving. (1/2)");
                         idleTimer = 0f;
                     }
                     else
                     {
                         IsPlaying = false;
-                        ui?.ShowIdleFail("Stopped twice too long—restarting…");
+                        ui?.ShowIdleFail("Stopped twice too long, restarting…");
                         StartCoroutine(RestartAfter(1.25f));
                     }
                 }

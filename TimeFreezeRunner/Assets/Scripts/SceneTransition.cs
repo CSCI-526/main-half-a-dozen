@@ -38,7 +38,7 @@ public class SceneTransition : MonoBehaviour
 
             // 🔓 Notify player once
             if (GameManager.I.ui != null)
-                GameManager.I.ui.ShowIdleToast("🔓 Cyan Door Unlocked — Proceed to the Corridor!", 2.5f);
+                GameManager.I.ui.ShowIdleToast("Cyan Door Unlocked. Proceed to the Corridor!", 2.5f);
         }
     }
 

@@ -84,15 +84,15 @@ public static void ShowIntro(int level)
         if (GameManager.I != null && GameManager.I.ui != null)
             GameManager.I.ui.HideHowTo();
         // set text content
-        levelTitle.text = $"<color=red><b>LEVEL</b></color> <color=red><b>{level}</b></color>";
+        levelTitle.text = $"<color=#6FA8DC><b>LEVEL</b></color> <color=#6FA8DC><b>{level}</b></color>";
 
         if (level == 1)
         {
             subtitle.text = 
-                "• Collect <color=yellow>all Coins</color>\n" +
-                "• Reach <color=red>EXIT</color>\n" +
-                "• Press <color=yellow>Space</color> to <color=yellow>Teleport</color>\n" +
-                "• Press <color=blue>1</color> or <color=blue>2</color> to pick teleport spot";
+                "Collect <color=yellow>all Coins</color>\n" +
+                "Reach <color=red>EXIT</color>\n" +
+                "Press <color=yellow>Space</color> to <color=yellow>Teleport</color>\n" +
+                "Press keys - <color=orange>1</color> or <color=orange>2</color> to pick teleport spot";
         }
         else if (level == 2)
         {
@@ -103,25 +103,25 @@ public static void ShowIntro(int level)
                 levelTitle.text = $"<color=red><b>DARK MAZE</b></color>";
                 subtitle.text = 
                     
-                    "• Light up all the <color=yellow>bulbs</color>\n" +
-                    "• Search for the <color=green>Key</color>";
+                    "Light up all the <color=yellow>bulbs</color>\n" +
+                    "Search for the <color=green>Key</color>";
             }
             else
             {
                 subtitle.text = 
-                    "• Collect <color=yellow>all Coins</color>\n" +
-                    "• Enter the <color=blue>Blue Door</color>";
+                    "Collect <color=yellow>all Coins</color>\n" +
+                    "Enter the <color=orange>Blue Door</color>";
             }
         }
         else if (level == 3)
         {
             subtitle.text = 
-                "• <color=red>Enemy Wipe Activated!</color>\n" +
-                "• Press <color=blue>K</color> to <color=blue>Clear</color> enemies for 5s\n" +
-                "• But beware, they'll <color=yellow>Multiply</color> after!";
+                "<color=red>Enemy Wipe Activated!</color>\n" +
+                "Press <color=orange>K</color> to <color=orange>Clear</color> enemies for 5s\n" +
+                "But beware, they'll <color=yellow>Multiply</color> after!";
         }
 
-        continueText.text = "Press <color=blue>ENTER</color> to start";
+        continueText.text = "Press <color=orange>ENTER</color> to start";
 
         // fade in
         Debug.Log($"[UILevelPanel.ShowIntroRoutine] Starting fade in, CanvasGroup alpha: {cg.alpha}");
