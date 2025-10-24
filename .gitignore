@@ -26,7 +26,10 @@ ExportedObj/
 !ProjectSettings/
 !Packages/
 
-docs/Build/*
-docs/TemplateData/*
-!docs/index.html.DS_Store
+!docs/Build/
+!docs/Build/**
+!docs/TemplateData/
+!docs/TemplateData/**
+!docs/index.html
+!docs/.DS_Store
 .DS_Store
