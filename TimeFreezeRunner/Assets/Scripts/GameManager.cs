@@ -915,6 +915,9 @@ public class GameManager : MonoBehaviour
         LevelManager.I.savedState.lastScene = "Level2_DarkMaze";
         Debug.Log("💾 Preserving Dark Maze retry state.");
     }
+        // === METRIC 2 (new, additive): log death position ===
+        DeathEventTracker.I?.LogDeathAt(player != null ? player.transform.position : Vector3.zero);
+
 
         player?.OnLose();
         ui?.ShowLose();
