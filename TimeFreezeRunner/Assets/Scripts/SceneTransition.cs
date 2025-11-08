@@ -38,7 +38,7 @@ public class SceneTransition : MonoBehaviour
 
             // 🔓 Notify player once
             if (GameManager.I.ui != null)
-                GameManager.I.ui.ShowIdleToast("Cyan Door Unlocked. Proceed to the Corridor!", 2.5f);
+                GameManager.I.ui.ShowIdleToast("Blue Door Unlocked. Proceed to the Corridor!", 2.5f);
         }
     }
 
@@ -91,7 +91,7 @@ private void OnTriggerEnter2D(Collider2D other)
     if (currentScene == "MainForLevel2" && !isUnlocked)
     {
         Debug.Log("❌ Door locked — collect all coins first!");
-        GameManager.I?.ui?.ShowIdleToast("Collect all coins to unlock the Cyan Door!", 2f);
+        GameManager.I?.ui?.ShowIdleToast("Collect all coins to unlock the Blue Door!", 2f);
         return;
     }
 

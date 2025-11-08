@@ -110,9 +110,8 @@ public static void ShowIntro(int level)
             else
             {
                 subtitle.text =
-                    "Collect <color=yellow>all Coins</color>\n" +
-                    "Enter the <color=orange>Blue Door</color>\n" +
-                    "Telport Available!";
+                    "Gather every <color=yellow>coin</color> and,\nMake your way to the <color=orange>Blue Door</color>\n" +
+                    "\nTeleport works in this maze too!";
             }
         }
         else if (level == 3)
