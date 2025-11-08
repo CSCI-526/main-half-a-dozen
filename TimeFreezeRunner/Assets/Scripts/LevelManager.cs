@@ -2,7 +2,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
+
 {
+
+    [HideInInspector] 
+public bool hasSeenLevel1Tutorial = false;
     public static LevelManager I;
 
     [Header("Completion Flags")]

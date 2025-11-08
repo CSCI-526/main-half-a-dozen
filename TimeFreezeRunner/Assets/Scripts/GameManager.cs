@@ -647,7 +647,7 @@ public class GameManager : MonoBehaviour
     // ===== Level 3 Nuke Power (Add-only) =====
     [Header("Level 3 – Nuke Power")]
     [SerializeField] bool enableNukePower = false;   // auto-enabled only for Level 3
-    [SerializeField] KeyCode killKey = KeyCode.K;
+    // [SerializeField] KeyCode killKey = KeyCode.K;
     [SerializeField] float killDurationSeconds = 5f;
     [SerializeField] int extraEnemiesPerUse = 2;
     [SerializeField] float nukeCooldownSeconds = 0f;
@@ -825,13 +825,36 @@ public class GameManager : MonoBehaviour
             }
             else idleTimer = 0f;
 
-            if (enableNukePower && Input.GetKeyDown(killKey) && !_nukeBusy && Time.time >= _nukeReadyAt)
-            {
-                if (currentNukeUses >= maxNukeUses)
-                    ui?.ShowIdleToast("No more Enemy Wipes left!");
-                else
-                    StartCoroutine(NukeEnemiesAndRespawn());
-            }
+            // if (enableNukePower && Input.GetKeyDown(killKey) && !_nukeBusy && Time.time >= _nukeReadyAt)
+            // {
+            //     if (currentNukeUses >= maxNukeUses)
+            //         ui?.ShowIdleToast("No more Enemy Wipes left!");
+            //     else
+            //         StartCoroutine(NukeEnemiesAndRespawn());
+            // }
+            if (enableNukePower && !_nukeBusy && Time.time >= _nukeReadyAt)
+{
+    // Detect Shift key on all platforms (Windows, macOS, WebGL)
+    bool shiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+    // Also catch modifier fallback (macOS bug workaround)
+    if (!shiftPressed && (Event.current != null && Event.current.shift))
+        shiftPressed = true;
+
+    if (shiftPressed)
+    {
+        if (currentNukeUses >= maxNukeUses)
+        {
+            ui?.ShowIdleToast("No more Enemy Wipes left!");
+        }
+        else
+        {
+            StartCoroutine(NukeEnemiesAndRespawn());
+            Debug.Log("💥 Enemy Wipe triggered with Shift!");
+        }
+    }
+}
+
         }
     }
 
