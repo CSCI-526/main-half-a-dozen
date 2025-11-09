@@ -779,6 +779,12 @@ public class GameManager : MonoBehaviour
         _spawner = FindObjectOfType<EnemySpawner>();
         StartCoroutine(CaptureInitialEnemyPositionsEndOfFrame());
         _wasIntroVisible = UILevelPanel.IsIntroVisible;
+
+        if (IdleFailTracker.Instance != null)
+        {
+            IdleFailTracker.Instance.idleThresholdSec = idleThreshold;  // log what gameplay uses
+            IdleFailTracker.Instance.OnLevelStarted();
+        }
     }
 
     void Update()
@@ -819,6 +825,7 @@ public class GameManager : MonoBehaviour
                     {
                         IsPlaying = false;
                         ui?.ShowIdleFail("Stopped twice too long, restarting…");
+                        IdleFailTracker.Instance?.OnIdleDeath();
                         StartCoroutine(RestartAfter(1.25f));
                     }
                 }
