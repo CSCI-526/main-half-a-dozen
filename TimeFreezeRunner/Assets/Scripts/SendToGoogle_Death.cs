@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class SendToGoogle_Death : MonoBehaviour
 {
@@ -12,9 +13,10 @@ public class SendToGoogle_Death : MonoBehaviour
     [SerializeField] private string ts        = ""; // entry.xxxxx
     [SerializeField] private string sessionId = "";
     [SerializeField] private string level     = "";
+    [SerializeField] private string sceneName = ""; 
     [SerializeField] private string posX      = "";
     [SerializeField] private string posY      = "";
-    [SerializeField] private string eventType = ""; 
+    [SerializeField] private string eventType = "";
 
     [Header("Settings")]
     public bool enabledSending = true;
@@ -31,7 +33,6 @@ public class SendToGoogle_Death : MonoBehaviour
             yield break;
         }
 
-   
         var wait = (_lastSend + minIntervalSeconds) - Time.unscaledTime;
         if (wait > 0) yield return new WaitForSecondsRealtime(wait);
 
@@ -41,11 +42,17 @@ public class SendToGoogle_Death : MonoBehaviour
             if (!string.IsNullOrEmpty(entryId)) form.AddField(entryId, value ?? "");
         }
 
+        
         Add(ts,        tsVal);
         Add(sessionId, sessionIdVal);
         Add(level,     levelVal);
-        Add(posX,      posWorld.x.ToString("0.###"));
-        Add(posY,      posWorld.y.ToString("0.###"));
+
+        //  Scene Tracker
+        string scene = SceneManager.GetActiveScene().name;
+        Add(sceneName, scene);
+
+        Add(posX,      posWorld.x.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+        Add(posY,      posWorld.y.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
         Add(eventType, "Death");
 
         using var www = UnityWebRequest.Post(formActionUrl, form);

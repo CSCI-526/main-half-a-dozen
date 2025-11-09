@@ -2704,6 +2704,7 @@ MonoBehaviour:
   ts: entry.1947869107
   sessionId: entry.1777443688
   level: entry.1479958267
+  sceneName: entry.1997703285
   posX: entry.86948944
   posY: entry.565749684
   eventType: entry.343985569
@@ -5586,6 +5587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3c03126722d42b5981283af0e7924c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasSeenLevel1Tutorial: 0
   allLevelsCompleted: 0
   currentLevel: 1
   darkMazeCleared: 0
