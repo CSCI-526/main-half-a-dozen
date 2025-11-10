@@ -461,6 +461,19 @@ public class PositionSwitchSystem : MonoBehaviour
         _switchesUsed = Mathf.Min(_switchesUsed + 1, maxSwitches);
         UpdateSwitchesUI();
         GameManager.I.ui?.ShowIdleToast(_switchesUsed + "/" + maxSwitches + " position switches used", 0.9f);
+        
+        // BETA METRIC4 CHANGES === Analytics: log successful Position Switch ===
+        {
+            // If you ever want to *explicitly* skip Dark Maze, uncomment the guard below:
+            // if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Level2_DarkMaze") { /* do nothing */ }
+            string levelName = (LevelManager.I != null)
+                ? $"Level{LevelManager.I.currentLevel}"
+                : UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+            float t = (LevelTimer.IsRunning ? LevelTimer.Elapsed : Time.timeSinceLevelLoad);
+            AnalyticsLogger.I?.LogPowerUpUse(levelName, "PositionSwitch", t);
+        }
+        // ================================================
 
         ExitTargeting(true);
 

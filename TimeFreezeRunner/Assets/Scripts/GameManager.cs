@@ -875,6 +875,12 @@ public class GameManager : MonoBehaviour
         idleTimer = 0f;
         idleWarnings = 0;
         RunAttemptTracker.I?.StartAttempt();
+
+        // BETA METRIC4 CHANGES === NEW: analytics per-attempt start ===
+        string lvl = $"Level{LevelManager.I.currentLevel}";
+        AnalyticsLogger.I?.StartNewRun(lvl);
+        LevelTimer.Begin();                 // (use Time.timeSinceLevelLoad instead if each level is its own scene)
+    // =======================================
     }
 
     public void OnCoinCollected()
@@ -1063,6 +1069,15 @@ public class GameManager : MonoBehaviour
         if (!enableNukePower) yield break;
         _nukeBusy = true;
         currentNukeUses++;
+
+        // BETA METRIC4 CHANGES === Analytics: log a successful Enemy Wipe ===
+        {
+            string levelName = "Level3";  // EnemyWipe is only in Level 3
+            float logTime = LevelTimer.IsRunning ? LevelTimer.Elapsed : Time.timeSinceLevelLoad;
+            AnalyticsLogger.I?.LogPowerUpUse(levelName, "EnemyWipe", logTime);
+        }
+        // ==============================================
+
         ui?.ShowIdleToast($"{currentNukeUses}/{maxNukeUses} enemy wipe used - enemies gone for {killDurationSeconds:0}s");
         _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
 
