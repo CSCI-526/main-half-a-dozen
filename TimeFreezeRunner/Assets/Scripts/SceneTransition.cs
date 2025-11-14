@@ -25,7 +25,6 @@ public class SceneTransition : MonoBehaviour
 
     private void Update()
     {
-        // Once all coins are collected, unlock and animate door
         if (!isUnlocked && GameManager.I != null && GameManager.I.coinsCollected >= GameManager.I.totalCoins)
         {
             isUnlocked = true;
@@ -36,32 +35,11 @@ public class SceneTransition : MonoBehaviour
         arrowInstance.transform.localPosition = 
             new Vector3(0f, 1.2f + Mathf.Sin(Time.time * 2f) * 0.1f, 0f);
 
-            // 🔓 Notify player once
             if (GameManager.I.ui != null)
                 GameManager.I.ui.ShowIdleToast("Blue Door Unlocked. Proceed to the Corridor!", 2.5f);
         }
     }
 
-    //     private void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (other.CompareTag("Player"))
-    //     {
-    //         // ✅ Only enforce coin requirement in Level 2
-    //         string sceneName = SceneManager.GetActiveScene().name;
-    //         bool requireCoins = sceneName == "MainForLevel2";
-
-    //         if (requireCoins && !isUnlocked)
-    //         {
-    //             Debug.Log("❌ Door locked — collect all coins first!");
-    //             if (GameManager.I != null && GameManager.I.ui != null)
-    //                 GameManager.I.ui.ShowIdleToast("Collect all coins to unlock the Cyan Door!", 2f);
-    //             return;
-    //         }
-
-    //         Debug.Log($"✅ Transition triggered → Loading {targetScene}");
-    //         StartCoroutine(LoadScene());
-    //     }
-    // }
 private void OnTriggerEnter2D(Collider2D other)
 {
     if (!other.CompareTag("Player")) return;
@@ -71,7 +49,6 @@ private void OnTriggerEnter2D(Collider2D other)
 
     if (currentScene == "Corridor")
     {
-        // Block returning left until key collected
         if (next == "MainForLevel2" && !LevelManager.I.canReturnToLevel2)
         {
             Debug.Log("❌ Cannot return to Level 2 yet — key not collected!");
@@ -79,7 +56,6 @@ private void OnTriggerEnter2D(Collider2D other)
             return;
         }
 
-        // Block re-entering Dark Maze after key collected
         if (next == "Level2_DarkMaze" && LevelManager.I.darkMazeCleared)
         {
             Debug.Log("🚫 Dark Maze sealed after key collection!");

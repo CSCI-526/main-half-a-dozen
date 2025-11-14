@@ -40,9 +40,6 @@ public bool hasSeenLevel1Tutorial = false;
         DontDestroyOnLoad(gameObject);
     }
 
-    // ---------------------------------------------------------
-    // ✅ Called when the player finishes a level (from GameManager)
-    // ---------------------------------------------------------
     public void OnLevelComplete()
     {
         Debug.Log($"✅ Level {currentLevel} complete!");
@@ -50,9 +47,6 @@ public bool hasSeenLevel1Tutorial = false;
         StartCoroutine(LoadNextLevelAfterDelay(2f));
     }
 
-    // ---------------------------------------------------------
-    // 🚀 Transition to the next main level
-    // ---------------------------------------------------------
     public System.Collections.IEnumerator LoadNextLevelAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -65,7 +59,7 @@ public bool hasSeenLevel1Tutorial = false;
         else if (currentLevel == 2)
         {
             nextScene = "MainForLevel3";
-            allLevelsCompleted = true; // ✅ mark all levels done
+            allLevelsCompleted = true; 
         }
         else
         {
@@ -73,14 +67,12 @@ public bool hasSeenLevel1Tutorial = false;
             yield break;
         }
 
-        // ✅ HARD RULE: when advancing from Level 2 → Level 3,
-        // start coins at 0 and make sure the door is initially LOCKED on the next level.
         if (currentLevel == 2 && savedState != null)
         {
             savedState.coinsCollected = 0;
             savedState.allCoinsCollected = false;
-            savedState.exitUnlocked = false;   // ensures GameManager won't re-open it on restore
-            savedState.lastScene = "";      // not a side-scene return
+            savedState.exitUnlocked = false;   
+            savedState.lastScene = "";      
             savedState.nextScene = "";
         }
 
@@ -94,14 +86,6 @@ public bool hasSeenLevel1Tutorial = false;
         SceneManager.LoadScene(nextScene);
     }
 
-    // ---------------------------------------------------------
-    // 🌟 Called from Dark Maze when the player finds the key
-    // ---------------------------------------------------------
-    // public void MarkDarkMazeCleared()
-    // {
-    //     darkMazeCleared = true;
-    //     Debug.Log("🌟 Dark Maze cleared! Player can now exit.");
-    // }
     public bool canReturnToLevel2 = false;
 
 public void MarkDarkMazeCleared()
@@ -111,9 +95,6 @@ public void MarkDarkMazeCleared()
     Debug.Log("🌟 Dark Maze cleared! Corridor updated.");
 }
 
-    // ---------------------------------------------------------
-    // 💾 Save & Restore Player State between scenes
-    // ---------------------------------------------------------
     public void ResetProgress()
     {
         currentLevel = 1;
@@ -130,7 +111,6 @@ public void MarkDarkMazeCleared()
         p.transform.position = savedState.position;
         GameManager.I.coinsCollected = savedState.coinsCollected;
 
-        // Restore exit door status
         if (savedState.exitUnlocked && GameManager.I.exitDoor != null)
             GameManager.I.exitDoor.ActivateExit(true);
 
