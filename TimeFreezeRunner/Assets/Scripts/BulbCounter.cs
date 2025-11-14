@@ -10,7 +10,6 @@ public class BulbCounter : MonoBehaviour
 
     void Start()
     {
-        // Count total bulbs dynamically
         totalBulbs = FindObjectsOfType<BeaconLightController>().Length;
         UpdateCounter();
     }

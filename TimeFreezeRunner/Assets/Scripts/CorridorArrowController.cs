@@ -1,54 +1,3 @@
-// using UnityEngine;
-
-// public class CorridorArrowController : MonoBehaviour
-// {
-//     public GameObject leftArrow;
-//     public GameObject rightArrow;
-
-// public Transform spawnFromLevel2;
-// public Transform spawnFromDarkMaze;
-
-//     void Start()
-//     {
-//         // Safety check in case references not set
-//         if (!leftArrow) leftArrow = GameObject.Find("LeftArrow");
-//         if (!rightArrow) rightArrow = GameObject.Find("RightArrow");
-//         if (GameManager.I != null && GameManager.I.player != null)
-//     {
-//         Transform spawn = LevelManager.I.darkMazeCleared
-//             ? spawnFromDarkMaze   // coming back from Dark Maze
-//             : spawnFromLevel2;    // coming from Level 2 main
-//         GameManager.I.player.transform.position = spawn.position;
-//     }
-
-//         UpdateArrows();
-//     }
-
-//     void UpdateArrows()
-//     {
-//         if (LevelManager.I != null && LevelManager.I.darkMazeCleared)
-//         {
-//             Debug.Log("🔄 CorridorArrowController: Dark maze cleared → show left arrow only");
-//             if (leftArrow) leftArrow.SetActive(true);
-//             if (rightArrow) rightArrow.SetActive(false);
-//         }
-//         else
-//         {
-//             Debug.Log("🔄 CorridorArrowController: Key not collected → show right arrow only");
-//             if (leftArrow) leftArrow.SetActive(false);
-//             if (rightArrow) rightArrow.SetActive(true);
-//         }
-
-//         if (LevelManager.I != null && GameManager.I != null && GameManager.I.ui != null)
-// {
-//     if (LevelManager.I.darkMazeCleared)
-//         GameManager.I.ui.ShowIdleToast("⬅️  Key secured! Head back toward the green exit door.", 2.8f);
-//     else
-//         GameManager.I.ui.ShowIdleToast("➡️  The Dark Maze awaits — venture ahead!", 2.8f);
-// }
-//     }
-// }
-
 using UnityEngine;
 using TMPro;
 
@@ -63,7 +12,7 @@ public class CorridorArrowController : MonoBehaviour
     public Transform spawnFromDarkMaze;
 
     [Header("Optional Local Hint Fallback")]
-    public TextMeshProUGUI hintTextTMP;   // ← assign HintTextTMP here in inspector
+    public TextMeshProUGUI hintTextTMP;  
 
     void Start()
     {
@@ -74,7 +23,6 @@ public class CorridorArrowController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.15f);
 
-        // reconnect GameManager if missing
         if (GameManager.I == null)
         {
             GameManager gm = FindObjectOfType<GameManager>();
@@ -92,7 +40,6 @@ public class CorridorArrowController : MonoBehaviour
         if (!leftArrow) leftArrow = GameObject.Find("LeftArrow");
         if (!rightArrow) rightArrow = GameObject.Find("RightArrow");
 
-        // set player spawn
         if (GameManager.I != null && GameManager.I.player != null)
         {
             Transform spawn = LevelManager.I.darkMazeCleared
@@ -122,7 +69,6 @@ public class CorridorArrowController : MonoBehaviour
             ? "Key secured! Head back toward the green exit door."
             : "The Dark Maze awaits, venture ahead!";
 
-        // Prefer UIController if available, otherwise use local TMP
         if (GameManager.I != null && GameManager.I.ui != null)
         {
             GameManager.I.ui.ShowIdleToast(msg, 9f);

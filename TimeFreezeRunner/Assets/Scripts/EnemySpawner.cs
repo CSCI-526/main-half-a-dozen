@@ -15,8 +15,8 @@ public class EnemySpawner : MonoBehaviour
     public int maxPlacementTries = 25;
 
     [Header("Arena Bounds")]
-    public BoxCollider2D arenaCollider;   // drag ArenaBounds (BoxCollider2D) here
-    public float arenaPadding = 0.75f;    // keeps spawns clearly inside the white frame
+    public BoxCollider2D arenaCollider;   
+    public float arenaPadding = 0.75f;   
 
     private readonly List<Vector2> placed = new();
 
@@ -43,7 +43,6 @@ public class EnemySpawner : MonoBehaviour
                 float r = spawnRadius + Random.Range(-1.0f, 1.0f);
                 Vector2 candidate = p + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * r;
 
-                // clamp into arena
                 if (arenaCollider)
                 {
                     var b = arenaCollider.bounds;
@@ -71,7 +70,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // ---------- rule checks ----------
     bool PassesRules(Vector2 pos, Vector2 playerPos)
     {
         if (!InsideArena(pos)) return false;                      // NEW
@@ -87,8 +85,6 @@ public class EnemySpawner : MonoBehaviour
         Gizmos.color = Color.cyan; Gizmos.DrawWireSphere(player.position, spawnRadius);
     }
 
-    // ================== public helpers ==================
-
     public List<Vector2> SpawnAtPositions(IEnumerable<Vector2> positions)
     {
         var created = new List<Vector2>();
@@ -96,7 +92,7 @@ public class EnemySpawner : MonoBehaviour
 
         foreach (var pos in positions)
         {
-            if (arenaCollider && !InsideArena(pos)) continue; // NEW safety
+            if (arenaCollider && !InsideArena(pos)) continue; 
 
             var go = Instantiate(enemyPrefab, pos, Quaternion.identity);
             var chaser = go.GetComponent<EnemyChaser>();
@@ -126,13 +122,11 @@ public class EnemySpawner : MonoBehaviour
         {
             attempts++;
 
-            // Strategy 1: ring around player
             float angle = Random.Range(0f, 360f) + Random.Range(-angleJitterDeg, angleJitterDeg);
             float rad = angle * Mathf.Deg2Rad;
             float r = spawnRadius + Random.Range(-1.0f, 1.0f);
             Vector2 candidate = p + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * r;
 
-            // clamp into arena
             if (arenaCollider)
             {
                 var b = arenaCollider.bounds;
@@ -148,7 +142,6 @@ public class EnemySpawner : MonoBehaviour
                 continue;
             }
 
-            // Strategy 2: small spiral nudge near the ring
             Vector2 seed = p + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * (spawnRadius * 0.8f);
             const int spiralSteps = 14;
             const float stepRadius = 0.35f;
@@ -171,7 +164,6 @@ public class EnemySpawner : MonoBehaviour
 
             if (placedOK) continue;
 
-            // Strategy 3: random near center
             Vector2 centerProbe = p + Random.insideUnitCircle * (spawnRadius * 0.6f);
             if (TryPlace(centerProbe, p, out final))
             {
@@ -210,7 +202,7 @@ public class EnemySpawner : MonoBehaviour
 
     bool InsideArena(Vector2 pos)
     {
-        if (!arenaCollider) return true; // backwards-compatible if not set
+        if (!arenaCollider) return true; 
         var b = arenaCollider.bounds;
         float minX = b.min.x + arenaPadding;
         float maxX = b.max.x - arenaPadding;

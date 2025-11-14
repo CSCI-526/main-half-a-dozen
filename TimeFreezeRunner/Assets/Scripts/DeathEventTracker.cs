@@ -20,7 +20,6 @@ public class DeathEventTracker : MonoBehaviour
         _sessionId = Guid.NewGuid().ToString();
     }
 
-    /// Call from GameManager when the player is caught.
     public void LogDeathAt(Vector3 worldPos)
     {
         if (sender == null) { Debug.LogWarning("[DeathTracker] Sender not assigned."); return; }

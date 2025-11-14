@@ -10,7 +10,6 @@ public class CorridorUIController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             infoText.text = "Loading next area...";
-            // Optionally: fade out or disable input before SceneTransition triggers
         }
     }
 }

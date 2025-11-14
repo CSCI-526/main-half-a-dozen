@@ -8,7 +8,7 @@ public class DarkMazeExitDoor : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             LevelManager.I.darkMazeCleared = true;
-            SceneManager.LoadScene("Main"); // back to main maze, door unlocked
+            SceneManager.LoadScene("Main"); 
         }
     }
 }
