@@ -503,6 +503,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   formPostUrl: https://docs.google.com/forms/d/e/1FAIpQLSfP_wqoJVUj-QgOBAx0rQV7W3DGIqZAtKFL-r1zbdTSSgQKHA/formResponse
   sessionId: 
+  persistSessionBetweenPlays: 0
+  analyticsEnabled: 1
+  requestTimeoutSec: 8
+  preventDuplicateSameFrame: 0
+  dryRun: 0
+  F_appVersion: 
+  F_platform: 
+  F_schemaVersion: 
+  schemaVersionValue: v1
 --- !u!4 &25932233
 Transform:
   m_ObjectHideFlags: 0
@@ -5050,6 +5059,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851922988}
   m_CullTransparentMesh: 1
+--- !u!1 &934868994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 934868997}
+  - component: {fileID: 934868996}
+  - component: {fileID: 934868995}
+  m_Layer: 0
+  m_Name: Analytics_EnemyContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &934868995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934868994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2922d4b07ae72436f852c81747049a6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sender: {fileID: 934868996}
+--- !u!114 &934868996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934868994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4e173fd1c3e4bd3aa30700bd43ca10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  formActionUrl: https://docs.google.com/forms/u/0/d/e/1FAIpQLSfSibK7_IIQP7NfkEOoZuqkfbK67mv3kstwHJM5gA52ZyANDg/formResponse
+  ts: entry.1394860049
+  sessionId: 'entry.714959192  '
+  level: entry.372858147
+  posX: entry.1536061646
+  posY: entry.1088995397
+  eventType: entry.1216338397
+  sceneName: entry.518724293
+  enemy1X: entry.550077422
+  enemy1Y: entry.2046284276
+  enemy1Distance: entry.926371320
+  enemy2X: 'entry.1252761405 '
+  enemy2Y: 'entry.517545879 '
+  enemy2Distance: entry.1358510828
+  enemy3X: 'entry.250934789 '
+  enemy3Y: entry.376651859
+  enemy3Distance: 'entry.1449421957 '
+  enabledSending: 1
+  verbose: 1
+  minIntervalSeconds: 0.05
+--- !u!4 &934868997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934868994}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &955379576
 GameObject:
   m_ObjectHideFlags: 0
@@ -10717,3 +10804,4 @@ SceneRoots:
   - {fileID: 338127579}
   - {fileID: 1327306411}
   - {fileID: 25932233}
+  - {fileID: 934868997}

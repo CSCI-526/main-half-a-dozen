@@ -289,6 +289,16 @@ public class GameManager : MonoBehaviour
         LevelManager.I.savedState.lastScene = "Level2_DarkMaze";
         Debug.Log("💾 Preserving Dark Maze retry state.");
     }
+    // ---------- NEW: log enemy context to the NEW form ----------
+    string levelLabel = (LevelManager.I != null)
+        ? $"Level{LevelManager.I.currentLevel}"
+        : currentScene;
+
+    if (player != null)
+    {
+        EnemyContextAtDeathTracker.I?.LogAtDeath(player.transform.position, levelLabel);
+    }
+    // ------------------------------------------------------------
         DeathEventTracker.I?.LogDeathAt(player != null ? player.transform.position : Vector3.zero);
 
 
