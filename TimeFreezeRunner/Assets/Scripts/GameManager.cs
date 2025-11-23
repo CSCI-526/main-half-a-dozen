@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour
                         IsPlaying = false;
                         ui?.ShowIdleFail("Stopped twice too long, restarting…");
                         IdleFailTracker.Instance?.OnIdleDeath();
-                        StartCoroutine(RestartAfter(1.25f));
+                        StartCoroutine(RestartAfter(3f));
                     }
                 }
             }
@@ -462,7 +462,7 @@ public class GameManager : MonoBehaviour
 
         _baselineEnemyPositions.AddRange(added);
         if (added.Count > 0)
-            ui?.ShowIdleToast($"+{added.Count} enemies joined!");
+            ui?.ShowIdleToast($"+{added.Count} enemies joined!",4f);
         _nukeBusy = false;
     }
 

@@ -36,7 +36,7 @@ public class SceneTransition : MonoBehaviour
             new Vector3(0f, 1.2f + Mathf.Sin(Time.time * 2f) * 0.1f, 0f);
 
             if (GameManager.I.ui != null)
-                GameManager.I.ui.ShowIdleToast("Blue Door Unlocked. Proceed to the Corridor!", 2.5f);
+                GameManager.I.ui.ShowIdleToast("Blue Door Unlocked. Proceed to the Corridor!", 4f);
         }
     }
 
@@ -67,7 +67,7 @@ private void OnTriggerEnter2D(Collider2D other)
     if (currentScene == "MainForLevel2" && !isUnlocked)
     {
         Debug.Log("❌ Door locked — collect all coins first!");
-        GameManager.I?.ui?.ShowIdleToast("Collect all coins to unlock the Blue Door!", 2f);
+        GameManager.I?.ui?.ShowIdleToast("Collect all coins to unlock the Blue Door!", 4f);
         return;
     }
 

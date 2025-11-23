@@ -78,7 +78,7 @@ public class CorridorArrowController : MonoBehaviour
             hintTextTMP.text = msg;
             hintTextTMP.gameObject.SetActive(true);
             CancelInvoke(nameof(HideHint));
-            Invoke(nameof(HideHint), 3f);
+            Invoke(nameof(HideHint), 4f);
         }
     }
 
