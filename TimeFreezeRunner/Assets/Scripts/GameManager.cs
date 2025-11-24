@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] int extraEnemiesPerUse = 2;
     [SerializeField] float nukeCooldownSeconds = 0f;
 
+    // NEW: blinking before enemies become dangerous again
+    [SerializeField] float respawnBlinkDuration = 2f;
+    [SerializeField] float respawnBlinkInterval = 0.2f;
+
     [SerializeField] int maxNukeUses = 2;      
     int currentNukeUses = 0;
 
@@ -422,6 +426,55 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // IEnumerator NukeEnemiesAndRespawn()
+    // {
+    //     if (!enableNukePower) yield break;
+    //     _nukeBusy = true;
+    //     currentNukeUses++;
+
+    //     {
+    //         string levelName = "Level3";  
+    //         float logTime = LevelTimer.IsRunning ? LevelTimer.Elapsed : Time.timeSinceLevelLoad;
+    //         AnalyticsLogger.I?.LogPowerUpUse(levelName, "EnemyWipe", logTime);
+    //     }
+
+    //     ui?.ShowIdleToast($"{currentNukeUses}/{maxNukeUses} enemy wipe used - enemies gone for {killDurationSeconds:0}s");
+    //     _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
+
+    //     var enemies = FindObjectsOfType<EnemyChaser>();
+    //     for (int i = 0; i < enemies.Length; i++)
+    //         if (enemies[i]) Destroy(enemies[i].gameObject);
+
+    //     // We want the last respawnBlinkDuration seconds to be a visible warning.
+    //     float blinkDuration = Mathf.Clamp(respawnBlinkDuration, 0f, killDurationSeconds);
+    //     float t = 0f;
+
+    //     // Enemies are completely gone (no visuals) for this first phase.
+    //     while (t < killDurationSeconds - blinkDuration)
+    //     {
+    //         t += Time.deltaTime;
+    //         yield return null;
+    //     }
+
+
+
+    //     if (_baselineEnemyPositions.Count > 0)
+    //     {
+    //         if (!TrySpawnerSpawnAtPositions(_baselineEnemyPositions))
+    //         {
+    //             for (int i = 0; i < _baselineEnemyPositions.Count; i++)
+    //                 SpawnFromTemplate(_baselineEnemyPositions[i]);
+    //         }
+    //     }
+
+    //     var added = TrySpawnerSpawnExtra(extraEnemiesPerUse)
+    //                 ?? FallbackSpawnExtraFromTemplate(extraEnemiesPerUse);
+
+    //     _baselineEnemyPositions.AddRange(added);
+    //     if (added.Count > 0)
+    //         ui?.ShowIdleToast($"+{added.Count} enemies joined!",4f);
+    //     _nukeBusy = false;
+    // }
     IEnumerator NukeEnemiesAndRespawn()
     {
         if (!enableNukePower) yield break;
@@ -437,17 +490,21 @@ public class GameManager : MonoBehaviour
         ui?.ShowIdleToast($"{currentNukeUses}/{maxNukeUses} enemy wipe used - enemies gone for {killDurationSeconds:0}s");
         _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
 
+        // 1) Kill all current enemies immediately
         var enemies = FindObjectsOfType<EnemyChaser>();
         for (int i = 0; i < enemies.Length; i++)
             if (enemies[i]) Destroy(enemies[i].gameObject);
 
+        // 2) Keep them completely gone for (killDurationSeconds - respawnBlinkDuration)
+        float blinkDuration = Mathf.Clamp(respawnBlinkDuration, 0f, killDurationSeconds);
         float t = 0f;
-        while (t < killDurationSeconds)
+        while (t < killDurationSeconds - blinkDuration)
         {
             t += Time.deltaTime;
             yield return null;
         }
 
+        // 3) Respawn them (still harmless for the blink phase)
         if (_baselineEnemyPositions.Count > 0)
         {
             if (!TrySpawnerSpawnAtPositions(_baselineEnemyPositions))
@@ -462,7 +519,13 @@ public class GameManager : MonoBehaviour
 
         _baselineEnemyPositions.AddRange(added);
         if (added.Count > 0)
-            ui?.ShowIdleToast($"+{added.Count} enemies joined!",4f);
+            ui?.ShowIdleToast($"+{added.Count} enemies joined!", 4f);
+
+        // 4) Blink + harmless warning before they become dangerous again
+        if (blinkDuration > 0f)
+            yield return StartCoroutine(BlinkEnemiesOnRespawn(blinkDuration));
+
+        // 5) Done – enemies are now fully active again
         _nukeBusy = false;
     }
 
@@ -525,4 +588,68 @@ public class GameManager : MonoBehaviour
                 ch.player = player.transform;
         }
     }
+
+    IEnumerator BlinkEnemiesOnRespawn(float duration)
+    {
+        if (duration <= 0f) yield break;
+
+        // Grab all enemies that just spawned
+        var enemies = FindObjectsOfType<EnemyChaser>();
+        var sprites = new List<SpriteRenderer>();
+        var colliders = new List<Collider2D>();
+        var scripts   = new List<EnemyChaser>();
+
+        // Make them harmless & prepare for blinking
+        foreach (var e in enemies)
+        {
+            if (!e) continue;
+
+            scripts.Add(e);
+
+            // Get main sprite renderer (child is safer)
+            var sr = e.GetComponentInChildren<SpriteRenderer>();
+            if (sr) sprites.Add(sr);
+
+            var col = e.GetComponent<Collider2D>();
+            if (col)
+            {
+                colliders.Add(col);
+                col.enabled = false;           // cannot hurt player
+            }
+
+            e.enabled = false;                // stop AI movement during blink
+        }
+
+        float elapsed = 0f;
+        float nextToggle = 0f;
+        bool visible = true;
+
+        // Blinking phase
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            if (elapsed >= nextToggle)
+            {
+                visible = !visible;
+                nextToggle += respawnBlinkInterval;
+
+                foreach (var sr in sprites)
+                    if (sr) sr.enabled = visible;
+            }
+
+            yield return null;
+        }
+
+        // Ensure they end visible & re-enabled (now dangerous again)
+        foreach (var sr in sprites)
+            if (sr) sr.enabled = true;
+
+        foreach (var col in colliders)
+            if (col) col.enabled = true;
+
+        foreach (var e in scripts)
+            if (e) e.enabled = true;
+    }
+    
 }
