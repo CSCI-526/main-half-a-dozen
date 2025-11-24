@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     public UIController ui;
     public ExitDoor exitDoor;
 
+    [Header("UI – Enemy Wipe Indicator")]
+    public TMPro.TMP_Text enemyWipeText;               // drag your counter TMP here
+    public string enemyWipeFormat = "Enemy Wipe: {0}/{1}"; // {0} = used, {1} = max
+
     [Header("Counts")]
     public int totalCoins;
     public int coinsCollected;
@@ -148,6 +152,8 @@ public class GameManager : MonoBehaviour
 
         enableNukePower = (LevelManager.I != null && LevelManager.I.currentLevel == 3);
         currentNukeUses = 0;
+        UpdateEnemyWipeUI();   // initialize indicator to 0 / max
+
         _spawner = FindObjectOfType<EnemySpawner>();
         StartCoroutine(CaptureInitialEnemyPositionsEndOfFrame());
         _wasIntroVisible = UILevelPanel.IsIntroVisible;
@@ -205,25 +211,25 @@ public class GameManager : MonoBehaviour
             else idleTimer = 0f;
 
             if (enableNukePower && !_nukeBusy && Time.time >= _nukeReadyAt)
-{
-    bool shiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            {
+                bool shiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-    if (!shiftPressed && (Event.current != null && Event.current.shift))
-        shiftPressed = true;
+                if (!shiftPressed && (Event.current != null && Event.current.shift))
+                    shiftPressed = true;
 
-    if (shiftPressed)
-    {
-        if (currentNukeUses >= maxNukeUses)
-        {
-            ui?.ShowIdleToast("No more Enemy Wipes left!");
-        }
-        else
-        {
-            StartCoroutine(NukeEnemiesAndRespawn());
-            Debug.Log("💥 Enemy Wipe triggered with Shift!");
-        }
-    }
-}
+                if (shiftPressed)
+                {
+                    if (currentNukeUses >= maxNukeUses)
+                    {
+                        ui?.ShowIdleToast("No more Enemy Wipes left!");   // keep this one
+                    }
+                    else
+                    {
+                        StartCoroutine(NukeEnemiesAndRespawn());
+                        Debug.Log("💥 Enemy Wipe triggered with Shift!");
+                    }
+                }
+            }
 
         }
     }
@@ -283,14 +289,13 @@ public class GameManager : MonoBehaviour
         IsPlaying = false;
         RunAttemptTracker.I?.LogRunEndFail();
 
-    string currentScene = SceneManager.GetActiveScene().name;
-    if (LevelManager.I != null && currentScene == "Level2_DarkMaze")
-    {
-        LevelManager.I.savedState.lastScene = "Level2_DarkMaze";
-        Debug.Log("💾 Preserving Dark Maze retry state.");
-    }
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (LevelManager.I != null && currentScene == "Level2_DarkMaze")
+        {
+            LevelManager.I.savedState.lastScene = "Level2_DarkMaze";
+            Debug.Log("💾 Preserving Dark Maze retry state.");
+        }
         DeathEventTracker.I?.LogDeathAt(player != null ? player.transform.position : Vector3.zero);
-
 
         player?.OnLose();
         ui?.ShowLose();
@@ -434,7 +439,8 @@ public class GameManager : MonoBehaviour
             AnalyticsLogger.I?.LogPowerUpUse(levelName, "EnemyWipe", logTime);
         }
 
-        ui?.ShowIdleToast($"{currentNukeUses}/{maxNukeUses} enemy wipe used - enemies gone for {killDurationSeconds:0}s");
+        // update indicator instead of showing usage toast
+        UpdateEnemyWipeUI();
         _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
 
         var enemies = FindObjectsOfType<EnemyChaser>();
@@ -461,8 +467,7 @@ public class GameManager : MonoBehaviour
                     ?? FallbackSpawnExtraFromTemplate(extraEnemiesPerUse);
 
         _baselineEnemyPositions.AddRange(added);
-        if (added.Count > 0)
-            ui?.ShowIdleToast($"+{added.Count} enemies joined!",4f);
+        // removed "+X enemies joined" toast to avoid extra enemy-wipe messages
         _nukeBusy = false;
     }
 
@@ -524,5 +529,11 @@ public class GameManager : MonoBehaviour
             if (ch != null && ch.player == null && player != null)
                 ch.player = player.transform;
         }
+    }
+
+    void UpdateEnemyWipeUI()
+    {
+        if (enemyWipeText == null) return;
+        enemyWipeText.text = string.Format(enemyWipeFormat, currentNukeUses, maxNukeUses);
     }
 }

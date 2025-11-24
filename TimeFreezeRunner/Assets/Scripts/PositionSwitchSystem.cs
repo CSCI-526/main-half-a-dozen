@@ -59,8 +59,12 @@ public class PositionSwitchSystem : MonoBehaviour
     [Header("UI")]
     public string noSpotMsg = "No safe switch!";
     public string noChargesMsg = "Maxed out position switches.";
+
+    [Tooltip("TMP text in top-right corner. Format uses switchesFormat: {0} = used, {1} = total.")]
     public TMP_Text switchesText;
-    public string switchesFormat = "Switches: {0}/{1}";
+
+    [Tooltip("UI format string. {0} = used, {1} = total.")]
+    public string switchesFormat = "Teleport: {0}/{1}";
 
     [Header("Charges")]
     public int maxSwitches = 2;
@@ -81,26 +85,53 @@ public class PositionSwitchSystem : MonoBehaviour
     Vector3[] _pairCache = null;
     float _pairCacheValidUntil = -999f;
 
-    void Awake() { SetRing(false, false); }
-    void OnEnable() { SetRing(false, false); _pairCache = null; _pairCacheValidUntil = -999f; IsTargetingGlobal = false; }
+    void Awake()
+    {
+        SetRing(false, false);
+    }
+
+    void OnEnable()
+    {
+        SetRing(false, false);
+        _pairCache = null;
+        _pairCacheValidUntil = -999f;
+        IsTargetingGlobal = false;
+    }
 
     void Start()
     {
         var coins = FindObjectsOfType<Coin>();
         _coinTransforms = new Transform[coins.Length];
         for (int i = 0; i < coins.Length; i++) _coinTransforms[i] = coins[i].transform;
+
+        // Initialize UI to 0 used / max
         UpdateSwitchesUI();
     }
 
-    void Reset() { if (!player) player = FindObjectOfType<PlayerController>()?.transform; }
+    void Reset()
+    {
+        if (!player) player = FindObjectOfType<PlayerController>()?.transform;
+    }
 
     // === FREE-TRIGGER MODE: Space always enters targeting and spawns EXACTLY TWO bounded spots ===
     void Update()
     {
-        if (!player || GameManager.I == null) { SetRing(false, false); return; }
-        if (!GameManager.I.IsPlaying) { SetRing(false, false); return; }
+        if (!player || GameManager.I == null)
+        {
+            SetRing(false, false);
+            return;
+        }
+        if (!GameManager.I.IsPlaying)
+        {
+            SetRing(false, false);
+            return;
+        }
 
-        if (_targeting) { UpdateTargetingInput(); return; }
+        if (_targeting)
+        {
+            UpdateTargetingInput();
+            return;
+        }
 
         SetRing(false, false);
 
@@ -258,15 +289,15 @@ public class PositionSwitchSystem : MonoBehaviour
     Vector3[] FindPairWithParams(
         List<float> radii, int directions, int jitters,
         float radialJit, float angularJit,
-        float enemyGap, float coinGap, bool requireLoS,
+        float enemyGap, float coinGap, bool requireLoSNow,
         int expand, float expandRadStep, int expandDirStep, float relaxEnemyStep)
     {
         for (int attempt = 0; attempt <= expand; attempt++)
         {
-            var pool = BuildScoredPool(radii, directions, jitters, radialJit, angularJit, enemyGap, coinGap, requireLoS);
+            var pool = BuildScoredPool(radii, directions, jitters, radialJit, angularJit, enemyGap, coinGap, requireLoSNow);
             if (pool.Count >= 2)
             {
-                var pair = PickBestSeparatedPair(pool, Mathf.Max(1.0f, minSpotSeparation * (requireLoS ? 1f : 0.8f)));
+                var pair = PickBestSeparatedPair(pool, Mathf.Max(1.0f, minSpotSeparation * (requireLoSNow ? 1f : 0.8f)));
                 if (pair.Length == 2) return pair;
             }
 
@@ -460,8 +491,9 @@ public class PositionSwitchSystem : MonoBehaviour
         _lastUsedAt = Time.unscaledTime;
         _switchesUsed = Mathf.Min(_switchesUsed + 1, maxSwitches);
         UpdateSwitchesUI();
-        GameManager.I.ui?.ShowIdleToast(_switchesUsed + "/" + maxSwitches + " position switches used", 0.9f);
-        
+        // Removed: GameManager.I.ui?.ShowIdleToast(_switchesUsed + "/" + maxSwitches + " position switches used", 0.9f);
+        // We now only rely on the top-right indicator.
+
         // BETA METRIC4 CHANGES === Analytics: log successful Position Switch ===
         {
             // If you ever want to *explicitly* skip Dark Maze, uncomment the guard below:
@@ -500,7 +532,12 @@ public class PositionSwitchSystem : MonoBehaviour
 
     void UpdateSwitchesUI()
     {
-        if (switchesText) switchesText.text = string.Format(switchesFormat, maxSwitches - _switchesUsed, maxSwitches);
+        if (!switchesText) return;
+
+        int used = _switchesUsed;
+        int total = maxSwitches;
+
+        switchesText.text = string.Format(switchesFormat, used, total);
     }
 
     // Reset position switch chances to maximum (for try again functionality)
