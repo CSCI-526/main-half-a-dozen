@@ -16,6 +16,8 @@ public bool hasSeenLevel1Tutorial = false;
     public int currentLevel = 1;
     public bool darkMazeCleared = false;
 
+    public int switchesUsed;
+
     [System.Serializable]
     public class PlayerState
     {
@@ -25,6 +27,8 @@ public bool hasSeenLevel1Tutorial = false;
         public string lastScene;
         public string nextScene;
         public bool allCoinsCollected;
+
+        public int switchesUsed;
     }
 
     public PlayerState savedState = new PlayerState();
@@ -71,9 +75,14 @@ public bool hasSeenLevel1Tutorial = false;
         {
             savedState.coinsCollected = 0;
             savedState.allCoinsCollected = false;
-            savedState.exitUnlocked = false;   
-            savedState.lastScene = "";      
+            savedState.exitUnlocked = false;
+            savedState.lastScene = "";
             savedState.nextScene = "";
+            
+            if(savedState != null)
+            {
+                savedState.switchesUsed = 0;
+            }
         }
 
         Debug.Log($"➡️ Loading next scene: {nextScene}");

@@ -99,14 +99,24 @@ public class PositionSwitchSystem : MonoBehaviour
     }
 
     void Start()
-    {
-        var coins = FindObjectsOfType<Coin>();
-        _coinTransforms = new Transform[coins.Length];
-        for (int i = 0; i < coins.Length; i++) _coinTransforms[i] = coins[i].transform;
+{
+    var coins = FindObjectsOfType<Coin>();
+    _coinTransforms = new Transform[coins.Length];
+    for (int i = 0; i < coins.Length; i++) _coinTransforms[i] = coins[i].transform;
 
-        // Initialize UI to 0 used / max
-        UpdateSwitchesUI();
+    // 🧠 Restore used switch count from LevelManager (if continuing within same level)
+    if (LevelManager.I != null && LevelManager.I.savedState != null)
+    {
+        _switchesUsed = Mathf.Clamp(LevelManager.I.savedState.switchesUsed, 0, maxSwitches);
     }
+    else
+    {
+        _switchesUsed = 0;
+    }
+
+    // 🧩 Ensure the UI text matches the restored value
+    UpdateSwitchesUI();
+}
 
     void Reset()
     {
@@ -234,11 +244,11 @@ public class PositionSwitchSystem : MonoBehaviour
         if (forced.Length != 2)
         {
             // Last resort: left/right nudged inside
-            Vector3 left  = ClampInsideBounds(player.position + Vector3.left  * Mathf.Max(1.2f, spotCheckRadius * 3f), boundsPadding);
+            Vector3 left = ClampInsideBounds(player.position + Vector3.left * Mathf.Max(1.2f, spotCheckRadius * 3f), boundsPadding);
             Vector3 right = ClampInsideBounds(player.position + Vector3.right * Mathf.Max(1.2f, spotCheckRadius * 3f), boundsPadding);
-            left  = IsSpotOpen(left)  ? left  : FindNearestOpenInside(left);
+            left = IsSpotOpen(left) ? left : FindNearestOpenInside(left);
             right = IsSpotOpen(right) ? right : FindNearestOpenInside(right);
-            left  = ClampInsideBounds(left, boundsPadding);
+            left = ClampInsideBounds(left, boundsPadding);
             right = ClampInsideBounds(right, boundsPadding);
             return new[] { left, right };
         }
@@ -376,11 +386,11 @@ public class PositionSwitchSystem : MonoBehaviour
         }
 
         // Last resort: left/right nudged inside
-        Vector3 left  = ClampInsideBounds(player.position + Vector3.left  * Mathf.Max(1.2f, spotCheckRadius * 3f), boundsPadding);
+        Vector3 left = ClampInsideBounds(player.position + Vector3.left * Mathf.Max(1.2f, spotCheckRadius * 3f), boundsPadding);
         Vector3 right = ClampInsideBounds(player.position + Vector3.right * Mathf.Max(1.2f, spotCheckRadius * 3f), boundsPadding);
-        left  = IsSpotOpen(left)  ? left  : FindNearestOpenInside(left);
+        left = IsSpotOpen(left) ? left : FindNearestOpenInside(left);
         right = IsSpotOpen(right) ? right : FindNearestOpenInside(right);
-        left  = ClampInsideBounds(left, boundsPadding);
+        left = ClampInsideBounds(left, boundsPadding);
         right = ClampInsideBounds(right, boundsPadding);
         return new[] { left, right };
     }
@@ -491,6 +501,12 @@ public class PositionSwitchSystem : MonoBehaviour
         _lastUsedAt = Time.unscaledTime;
         _switchesUsed = Mathf.Min(_switchesUsed + 1, maxSwitches);
         UpdateSwitchesUI();
+
+        // 🧠 Persist count to LevelManager for cross-scene consistency
+        if (LevelManager.I != null && LevelManager.I.savedState != null)
+        {
+            LevelManager.I.savedState.switchesUsed = _switchesUsed;
+        }
         // Removed: GameManager.I.ui?.ShowIdleToast(_switchesUsed + "/" + maxSwitches + " position switches used", 0.9f);
         // We now only rely on the top-right indicator.
 
@@ -817,4 +833,6 @@ public class PositionSwitchSystem : MonoBehaviour
         SetRing(false, false);
         IsTargetingGlobal = false;
     }
+    
+    public int GetUsedSwitchesCount() => _switchesUsed;
 }
