@@ -3836,6 +3836,7 @@ MonoBehaviour:
   totalCoins: 0
   coinsCollected: 0
   idleThreshold: 3
+  zzzBubblePrefab: {fileID: 7639156773174972290, guid: aaf77b8320ee347659422c5e3e0f51af, type: 3}
   enableNukePower: 0
   killDurationSeconds: 5
   extraEnemiesPerUse: 2

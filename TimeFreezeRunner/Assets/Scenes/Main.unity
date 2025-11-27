@@ -3705,9 +3705,12 @@ MonoBehaviour:
   player: {fileID: 675617859}
   ui: {fileID: 82621459}
   exitDoor: {fileID: 727212822}
+  enemyWipeText: {fileID: 0}
+  enemyWipeFormat: 'Enemy Wipe: {0}/{1}'
   totalCoins: 0
   coinsCollected: 0
-  idleThreshold: 3
+  idleThreshold: 4
+  zzzBubblePrefab: {fileID: 7639156773174972290, guid: aaf77b8320ee347659422c5e3e0f51af, type: 3}
   enableNukePower: 0
   killDurationSeconds: 5
   extraEnemiesPerUse: 2
