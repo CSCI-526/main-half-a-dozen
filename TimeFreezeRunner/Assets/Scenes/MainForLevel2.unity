@@ -1171,6 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &225247537
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2430,6 +2431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &387296343
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2982,6 +2984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &533083004
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3245,6 +3248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &578342253
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3482,7 +3486,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8179829984677709829, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
   m_PrefabInstance: {fileID: 3872935583089457693}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3872935583089457694}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adc7603e9510649afa90afece7c277a4, type: 3}
@@ -5048,6 +5052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &921159570
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6387,6 +6392,7 @@ MonoBehaviour:
   allLevelsCompleted: 0
   currentLevel: 1
   darkMazeCleared: 0
+  switchesUsed: 0
   savedState:
     position: {x: 0, y: 0, z: 0}
     coinsCollected: 0
@@ -6394,6 +6400,7 @@ MonoBehaviour:
     lastScene: 
     nextScene: 
     allCoinsCollected: 0
+    switchesUsed: 0
   canReturnToLevel2: 0
 --- !u!4 &1286228971
 Transform:
@@ -6441,6 +6448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &1331677320
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6838,6 +6846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &1376803630
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -9090,6 +9099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &1756715198
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -10143,6 +10153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
 --- !u!58 &1958338836
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -10974,8 +10985,112 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5966321168186076587, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 412385290}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6954962199992217806, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3872935583089457695}
   m_SourcePrefab: {fileID: 100100000, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
+--- !u!1 &3872935583089457694 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6954962199992217806, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
+  m_PrefabInstance: {fileID: 3872935583089457693}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &3872935583089457695
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3872935583089457694}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &5140333169877316686
 PrefabInstance:
   m_ObjectHideFlags: 0
