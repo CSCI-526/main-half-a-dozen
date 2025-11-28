@@ -42,6 +42,10 @@ public bool hasSeenLevel1Tutorial = false;
 
     public void OnLevelComplete()
     {
+        if (currentLevel == 1)
+        {
+            hasSeenLevel1Tutorial = true;
+        }
         Debug.Log($"✅ Level {currentLevel} complete!");
         UILevelPanel.ShowComplete(currentLevel);
         StartCoroutine(LoadNextLevelAfterDelay(2f));

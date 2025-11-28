@@ -46,6 +46,10 @@ public class GameManager : MonoBehaviour
     GameObject _coinTemplateHiddenClone;
     bool _wasIntroVisible = false;
 
+    [HideInInspector]
+    public bool ignoreTeleportUse = false;
+
+
     void Awake()
     {
         if (I != null && I != this) { Destroy(gameObject); return; }
@@ -298,6 +302,10 @@ public class GameManager : MonoBehaviour
         DeathEventTracker.I?.LogDeathAt(player != null ? player.transform.position : Vector3.zero);
 
         player?.OnLose();
+
+        // ⭐ Reset tutorial immediately when player dies
+        FindObjectOfType<Level1InGameTutorial>()?.ResetTutorialState();
+        
         ui?.ShowLose();
         FreezeAllEnemies(true);
     }
