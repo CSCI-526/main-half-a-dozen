@@ -6,6 +6,9 @@ public class BeaconLightController : MonoBehaviour
     public Light2D beaconLight;
     private bool activated = false;
 
+    [Header("SFX")]
+    public AudioClip activationSFX;  // assign in Inspector
+
     public bool IsActivated() => activated;
 
     void OnTriggerEnter2D(Collider2D other)
@@ -14,6 +17,14 @@ public class BeaconLightController : MonoBehaviour
         {
             Debug.Log("Beacon activated!:" + name);
             activated = true;
+
+            // 🔊 Play sound: use player's AudioSource
+            var audio = other.GetComponent<AudioSource>();
+            if (audio != null && activationSFX != null)
+            {
+                audio.PlayOneShot(activationSFX);
+            }
+
             FindObjectOfType<BulbCounter>()?.IncrementBulbCount();
             StartCoroutine(FadeInLight());
         }
@@ -21,7 +32,6 @@ public class BeaconLightController : MonoBehaviour
 
     System.Collections.IEnumerator FadeInLight()
     {
-        activated = true;
         float target = 2f;
         while (beaconLight.intensity < target)
         {

@@ -1171,7 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &225247537
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2431,7 +2431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &387296343
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2984,7 +2984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &533083004
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3248,7 +3248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &578342253
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -5052,7 +5052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &921159570
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6448,7 +6448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &1331677320
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6846,7 +6846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &1376803630
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -9099,7 +9099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &1756715198
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -10153,7 +10153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cd79a781c7d4de3975dc41eb661484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinSFX: {fileID: 8300000, guid: 553f6d588f2ca48808ebd014a2fc38cf, type: 3}
+  coinSFX: {fileID: 8300000, guid: 81d909895b9b149008c44606c2a0276d, type: 3}
 --- !u!58 &1958338836
 CircleCollider2D:
   m_ObjectHideFlags: 0
