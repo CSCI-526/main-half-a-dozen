@@ -3842,6 +3842,8 @@ MonoBehaviour:
   exitDoor: {fileID: 727212822}
   enemyWipeText: {fileID: 0}
   enemyWipeFormat: 'Enemy Wipe: {0}/{1}'
+  enemyWipeHintText: {fileID: 0}
+  enemyWipeCountdownText: {fileID: 0}
   totalCoins: 0
   coinsCollected: 0
   idleThreshold: 3
@@ -3850,6 +3852,8 @@ MonoBehaviour:
   extraEnemiesPerUse: 2
   nukeCooldownSeconds: 0
   maxNukeUses: 2
+  warningLeadTimeSeconds: 2
+  ignoreTeleportUse: 0
 --- !u!4 &508777320
 Transform:
   m_ObjectHideFlags: 0
@@ -5656,7 +5660,7 @@ MonoBehaviour:
   noSpotMsg: No safe switch!
   noChargesMsg: Maxed out position swicthes!
   switchesText: {fileID: 1861114355}
-  switchesFormat: 'PositionSwitch: {0}/{1}'
+  switchesFormat: 'Teleport: {0}/{1}'
   maxSwitches: 2
   pairCacheTTL: 0.3
 --- !u!4 &1137882637
@@ -5781,6 +5785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasSeenLevel1Tutorial: 0
+  hasSeenEnemyWipeTutorial: 0
   allLevelsCompleted: 0
   currentLevel: 1
   darkMazeCleared: 0
@@ -9490,7 +9495,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Switches: 0/2'
+  m_text: 'Teleport: 0/2'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9581,9 +9586,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 82621458}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 347, y: 262}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -133, y: -38}
   m_SizeDelta: {x: 250, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1871945171

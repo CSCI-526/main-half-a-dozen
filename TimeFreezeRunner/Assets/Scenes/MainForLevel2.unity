@@ -2925,6 +2925,10 @@ MonoBehaviour:
   player: {fileID: 675617859}
   ui: {fileID: 82621459}
   exitDoor: {fileID: 727212822}
+  enemyWipeText: {fileID: 0}
+  enemyWipeFormat: 'Enemy Wipe: {0}/{1}'
+  enemyWipeHintText: {fileID: 0}
+  enemyWipeCountdownText: {fileID: 0}
   totalCoins: 0
   coinsCollected: 0
   idleThreshold: 3
@@ -2933,6 +2937,8 @@ MonoBehaviour:
   extraEnemiesPerUse: 2
   nukeCooldownSeconds: 0
   maxNukeUses: 2
+  warningLeadTimeSeconds: 2
+  ignoreTeleportUse: 0
 --- !u!4 &508777320
 Transform:
   m_ObjectHideFlags: 0
@@ -5996,7 +6002,7 @@ MonoBehaviour:
   noSpotMsg: No safe switch!
   noChargesMsg: Maxed out position swicthes!
   switchesText: {fileID: 1614685657}
-  switchesFormat: 'PositionSwitch: {0}/{1}'
+  switchesFormat: 'Teleport: {0}/{1}'
   maxSwitches: 2
   pairCacheTTL: 0.3
 --- !u!4 &1137882637
@@ -6381,6 +6387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasSeenLevel1Tutorial: 0
+  hasSeenEnemyWipeTutorial: 0
   allLevelsCompleted: 0
   currentLevel: 1
   darkMazeCleared: 0

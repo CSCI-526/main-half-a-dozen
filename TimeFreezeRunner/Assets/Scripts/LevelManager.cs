@@ -7,7 +7,11 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector] 
 public bool hasSeenLevel1Tutorial = false;
-    public static LevelManager I;
+// NEW: remember if Enemy Wipe tutorial in Level 3 has been completed at least once
+[HideInInspector]
+public bool hasSeenEnemyWipeTutorial = false;
+
+public static LevelManager I;
 
     [Header("Completion Flags")]
     public bool allLevelsCompleted = false;
