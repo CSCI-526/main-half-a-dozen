@@ -356,19 +356,86 @@ if (LevelManager.I != null && LevelManager.I.savedState != null)
     }
 
     IEnumerator NukeEnemiesAndRespawn()
+{
+    if (!enableNukePower || _nukeBusy) yield break;
+    _nukeBusy = true;
+
+    currentNukeUses++;
+    UpdateEnemyWipeUI();
+
+    _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
+
+    // Capture all enemies alive right now
+    var enemies = new List<EnemyChaser>(FindObjectsOfType<EnemyChaser>());
+
+    // Save their positions so we can reuse them for spawning
+    var spawnPositions = new List<Vector3>();
+    foreach (var e in enemies)
     {
-        if (!enableNukePower) yield break;
-        _nukeBusy = true;
-        currentNukeUses++;
-        UpdateEnemyWipeUI();
-        _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
-
-        foreach (var e in FindObjectsOfType<EnemyChaser>())
-            Destroy(e.gameObject);
-
-        yield return new WaitForSeconds(killDurationSeconds);
-        _nukeBusy = false;
+        if (e != null)
+            spawnPositions.Add(e.transform.position);
     }
+
+    // If somehow no enemies, just bail out
+    if (spawnPositions.Count == 0)
+    {
+        _nukeBusy = false;
+        yield break;
+    }
+
+    // TEMPORARILY disable them
+    foreach (var e in enemies)
+    {
+        if (e != null)
+            e.gameObject.SetActive(false);
+    }
+
+    // “Gone for 5 seconds”
+    yield return new WaitForSeconds(killDurationSeconds);
+
+    // RE-ENABLE them (they return!)
+    foreach (var e in enemies)
+    {
+        if (e != null)
+            e.gameObject.SetActive(true);
+    }
+
+    // ⬇️ EXTRA PART: spawn +2 enemies (or whatever extraEnemiesPerUse is) each time
+
+    // Use the first valid enemy as a template to clone
+    EnemyChaser template = null;
+    foreach (var e in enemies)
+    {
+        if (e != null)
+        {
+            template = e;
+            break;
+        }
+    }
+
+    if (template != null && extraEnemiesPerUse > 0)
+    {
+        for (int i = 0; i < extraEnemiesPerUse; i++)
+        {
+            // Pick a random existing spawn position
+            Vector3 basePos = spawnPositions[Random.Range(0, spawnPositions.Count)];
+
+            // Small random offset so they don’t all stack on top of each other
+            Vector2 offset2D = Random.insideUnitCircle * 1.5f;
+            Vector3 spawnPos = basePos + new Vector3(offset2D.x, offset2D.y, 0f);
+
+            GameObject clone = Instantiate(template.gameObject, spawnPos, Quaternion.identity);
+            clone.SetActive(true);
+
+            var ch = clone.GetComponent<EnemyChaser>();
+            if (ch != null && player != null)
+                ch.player = player.transform;
+        }
+    }
+
+    _nukeBusy = false;
+}
+
 
     bool IsUIBlockingInput()
     {

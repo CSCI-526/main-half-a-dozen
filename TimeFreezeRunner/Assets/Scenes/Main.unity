@@ -5564,7 +5564,7 @@ MonoBehaviour:
   noSpotMsg: No safe switch!
   noChargesMsg: Maxed out position swicthes!
   switchesText: {fileID: 1861114355}
-  switchesFormat: 'PositionSwitch: {0}/{1}'
+  switchesFormat: 'Teleport: {0}/{1}'
   maxSwitches: 2
   pairCacheTTL: 0.3
 --- !u!4 &1137882637
@@ -9460,8 +9460,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4293824383
-  m_fontColor: {r: 0.49803922, g: 0.5596157, b: 0.93333334, a: 1}
+    rgba: 4285958004
+  m_fontColor: {r: 0.45490196, g: 0.5294118, b: 0.4627451, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9544,7 +9544,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 347, y: 262}
+  m_AnchoredPosition: {x: 414, y: 262}
   m_SizeDelta: {x: 250, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1871945171
