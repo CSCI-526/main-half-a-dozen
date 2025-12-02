@@ -593,7 +593,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 14
 --- !u!212 &33012659
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -982,7 +982,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 14
 --- !u!212 &49479729
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2318,7 +2318,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 14
 --- !u!1 &281200860
 GameObject:
   m_ObjectHideFlags: 0
@@ -3152,7 +3152,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 14
 --- !u!212 &393528187
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4422,7 +4422,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 14
 --- !u!212 &727169932
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10748,7 +10748,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 14
 --- !u!212 &2110274284
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10906,7 +10906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8179829984677709829, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
       propertyPath: moveSpeed
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10980,7 +10980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472447681848540882, guid: 676da3fe6edfe40f88b9b5c53c761c05, type: 3}
       propertyPath: speed
-      value: 3.2
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 5946275743971038598, guid: 676da3fe6edfe40f88b9b5c53c761c05, type: 3}
       propertyPath: m_Size.x

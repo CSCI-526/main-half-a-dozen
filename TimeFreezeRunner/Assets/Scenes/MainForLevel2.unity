@@ -1206,7 +1206,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &225247538
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2466,7 +2466,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &387296344
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3019,7 +3019,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &533083005
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3283,7 +3283,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &578342254
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5087,7 +5087,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &921159571
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6483,7 +6483,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &1331677321
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6881,7 +6881,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &1376803631
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9134,7 +9134,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &1756715199
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10188,7 +10188,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 14
 --- !u!212 &1958338837
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10982,7 +10982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8179829984677709829, guid: d2bc4151c343e4821a7d770dd5e55b3f, type: 3}
       propertyPath: moveSpeed
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11161,7 +11161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3472447681848540882, guid: 676da3fe6edfe40f88b9b5c53c761c05, type: 3}
       propertyPath: speed
-      value: 3.2
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 6132918678517223552, guid: 676da3fe6edfe40f88b9b5c53c761c05, type: 3}
       propertyPath: m_GravityScale
