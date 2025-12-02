@@ -60,30 +60,51 @@ public bool hasSeenLevel1Tutorial = false;
 
         if (currentLevel == 1)
             nextScene = "MainForLevel2";
+        // else if (currentLevel == 2)
+        // {
+        //     nextScene = "MainForLevel3";
+        //     allLevelsCompleted = true; 
+        // }
         else if (currentLevel == 2)
-        {
-            nextScene = "MainForLevel3";
-            allLevelsCompleted = true; 
-        }
+{
+    nextScene = "MainForLevel3";
+    allLevelsCompleted = true;
+
+    // FULL RESET for Level 3 start
+    savedState = new PlayerState();   // wipe saved state entirely
+    darkMazeCleared = false;
+    switchesUsed = 0;
+
+    Debug.Log("🧹 Resetting state for a clean Level 3 start.");
+}
         else
         {
             Debug.Log("🎉 All levels finished!");
             yield break;
         }
 
-        if (currentLevel == 2 && savedState != null)
-        {
-            savedState.coinsCollected = 0;
-            savedState.allCoinsCollected = false;
-            savedState.exitUnlocked = false;
-            savedState.lastScene = "";
-            savedState.nextScene = "";
-            
-            if(savedState != null)
-            {
-                savedState.switchesUsed = 0;
-            }
-        }
+        // if (currentLevel == 2 && savedState != null)
+        // {
+        //     savedState.coinsCollected = 0;
+        //     savedState.allCoinsCollected = false;
+        //     savedState.exitUnlocked = false;
+        //     savedState.lastScene = "";
+        //     savedState.nextScene = "";
+
+        //     if(savedState != null)
+        //     {
+        //         savedState.switchesUsed = 0;
+        //     }
+        // }
+        if (currentLevel == 1)
+{
+    // Full reset of Level-2 progress
+    savedState = new PlayerState();
+    darkMazeCleared = false;
+    switchesUsed = 0;
+
+    Debug.Log("🧹 Resetting all Level-2 state — safe fresh start.");
+}
 
         Debug.Log($"➡️ Loading next scene: {nextScene}");
         SceneManager.sceneLoaded += (scene, mode) =>

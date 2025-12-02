@@ -60,16 +60,42 @@ public class GameManager : MonoBehaviour
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        // 🧠 Reset position switch count when entering a new main level
-if (LevelManager.I != null && LevelManager.I.savedState != null)
+        // ----------------------------
+// 💥 LEVEL 3 CLEAN START FIX
+// ----------------------------
+if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
 {
-    // Detect fresh entry scene like "MainForLevel2", "MainForLevel3", etc.
-    if (sceneName.StartsWith("MainForLevel") && string.IsNullOrEmpty(LevelManager.I.savedState.lastScene))
-    {
-        LevelManager.I.savedState.switchesUsed = 0;
-        Debug.Log("🔁 Resetting position switch count for new level start.");
-    }
+    Debug.Log("🧹 Level 3 start — resetting all state.");
+
+    // Reset coin values
+    coinsCollected = 0;
+    totalCoins = FindObjectsOfType<Coin>().Length;
+    ui?.SetCoin(totalCoins, coinsCollected);
+
+    // Reset exit door (should start locked)
+    if (exitDoor != null)
+        exitDoor.ActivateExit(false);
+
+    // Reset teleports
+    LevelManager.I.switchesUsed = 0;
+
+    // Clear saved state so Level 3 is not treated as "returning"
+    LevelManager.I.savedState = new LevelManager.PlayerState();
+
+    // Force Level 3 intro
+    UILevelPanel.ShowIntro(3);
 }
+
+        // 🧠 Reset position switch count when entering a new main level
+        if (LevelManager.I != null && LevelManager.I.savedState != null)
+        {
+            // Detect fresh entry scene like "MainForLevel2", "MainForLevel3", etc.
+            if (sceneName.StartsWith("MainForLevel") && string.IsNullOrEmpty(LevelManager.I.savedState.lastScene))
+            {
+                LevelManager.I.savedState.switchesUsed = 0;
+                Debug.Log("🔁 Resetting position switch count for new level start.");
+            }
+        }
 
         if (sceneName == "Level2_DarkMaze")
         {
@@ -96,7 +122,9 @@ if (LevelManager.I != null && LevelManager.I.savedState != null)
                     coinsCollected = s.coinsCollected;
                     ui?.SetCoin(totalCoins, coinsCollected);
 
-                    if (LevelManager.I.currentLevel == 2 && LevelManager.I.savedState.allCoinsCollected)
+                    // if (LevelManager.I.currentLevel == 2 && LevelManager.I.savedState.allCoinsCollected)
+                    if (LevelManager.I.currentLevel == 2 && LevelManager.I.savedState.allCoinsCollected 
+    && LevelManager.I.savedState.lastScene == "Level2_DarkMaze")
                     {
                         foreach (var coin in FindObjectsOfType<Coin>())
                             coin.gameObject.SetActive(false);
@@ -344,97 +372,123 @@ if (LevelManager.I != null && LevelManager.I.savedState != null)
         enemyWipeText.text = string.Format(enemyWipeFormat, currentNukeUses, maxNukeUses);
     }
 
+    // IEnumerator CaptureInitialEnemyPositionsEndOfFrame()
+    // {
+    //     yield return null;
+    //     _baselineEnemyPositions.Clear();
+    //     _baselineCoinPositions.Clear();
+    //     foreach (var e in FindObjectsOfType<EnemyChaser>())
+    //         _baselineEnemyPositions.Add(e.transform.position);
+    //     foreach (var c in FindObjectsOfType<Coin>())
+    //         _baselineCoinPositions.Add(c.transform.position);
+    // }
     IEnumerator CaptureInitialEnemyPositionsEndOfFrame()
     {
         yield return null;
+
         _baselineEnemyPositions.Clear();
         _baselineCoinPositions.Clear();
-        foreach (var e in FindObjectsOfType<EnemyChaser>())
+
+        var enemies = FindObjectsOfType<EnemyChaser>();
+        var coins = FindObjectsOfType<Coin>();
+
+        // Save original enemy positions
+        foreach (var e in enemies)
             _baselineEnemyPositions.Add(e.transform.position);
-        foreach (var c in FindObjectsOfType<Coin>())
+
+        // Save original coin positions
+        foreach (var c in coins)
             _baselineCoinPositions.Add(c.transform.position);
+
+        // 🔥 FIX: Capture a coin prefab template to clone later
+        if (coins.Length > 0)
+        {
+            _coinTemplateHiddenClone = Instantiate(coins[0].gameObject);
+            _coinTemplateHiddenClone.name = "CoinTemplate";
+            _coinTemplateHiddenClone.SetActive(false);   // hide template
+        }
     }
 
     IEnumerator NukeEnemiesAndRespawn()
-{
-    if (!enableNukePower || _nukeBusy) yield break;
-    _nukeBusy = true;
-
-    currentNukeUses++;
-    UpdateEnemyWipeUI();
-
-    _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
-
-    // Capture all enemies alive right now
-    var enemies = new List<EnemyChaser>(FindObjectsOfType<EnemyChaser>());
-
-    // Save their positions so we can reuse them for spawning
-    var spawnPositions = new List<Vector3>();
-    foreach (var e in enemies)
     {
-        if (e != null)
-            spawnPositions.Add(e.transform.position);
-    }
+        if (!enableNukePower || _nukeBusy) yield break;
+        _nukeBusy = true;
 
-    // If somehow no enemies, just bail out
-    if (spawnPositions.Count == 0)
-    {
+        currentNukeUses++;
+        UpdateEnemyWipeUI();
+
+        _nukeReadyAt = Time.time + nukeCooldownSeconds + killDurationSeconds;
+
+        // Capture all enemies alive right now
+        var enemies = new List<EnemyChaser>(FindObjectsOfType<EnemyChaser>());
+
+        // Save their positions so we can reuse them for spawning
+        var spawnPositions = new List<Vector3>();
+        foreach (var e in enemies)
+        {
+            if (e != null)
+                spawnPositions.Add(e.transform.position);
+        }
+
+        // If somehow no enemies, just bail out
+        if (spawnPositions.Count == 0)
+        {
+            _nukeBusy = false;
+            yield break;
+        }
+
+        // TEMPORARILY disable them
+        foreach (var e in enemies)
+        {
+            if (e != null)
+                e.gameObject.SetActive(false);
+        }
+
+        // “Gone for 5 seconds”
+        yield return new WaitForSeconds(killDurationSeconds);
+
+        // RE-ENABLE them (they return!)
+        foreach (var e in enemies)
+        {
+            if (e != null)
+                e.gameObject.SetActive(true);
+        }
+
+        // ⬇️ EXTRA PART: spawn +2 enemies (or whatever extraEnemiesPerUse is) each time
+
+        // Use the first valid enemy as a template to clone
+        EnemyChaser template = null;
+        foreach (var e in enemies)
+        {
+            if (e != null)
+            {
+                template = e;
+                break;
+            }
+        }
+
+        if (template != null && extraEnemiesPerUse > 0)
+        {
+            for (int i = 0; i < extraEnemiesPerUse; i++)
+            {
+                // Pick a random existing spawn position
+                Vector3 basePos = spawnPositions[Random.Range(0, spawnPositions.Count)];
+
+                // Small random offset so they don’t all stack on top of each other
+                Vector2 offset2D = Random.insideUnitCircle * 1.5f;
+                Vector3 spawnPos = basePos + new Vector3(offset2D.x, offset2D.y, 0f);
+
+                GameObject clone = Instantiate(template.gameObject, spawnPos, Quaternion.identity);
+                clone.SetActive(true);
+
+                var ch = clone.GetComponent<EnemyChaser>();
+                if (ch != null && player != null)
+                    ch.player = player.transform;
+            }
+        }
+
         _nukeBusy = false;
-        yield break;
     }
-
-    // TEMPORARILY disable them
-    foreach (var e in enemies)
-    {
-        if (e != null)
-            e.gameObject.SetActive(false);
-    }
-
-    // “Gone for 5 seconds”
-    yield return new WaitForSeconds(killDurationSeconds);
-
-    // RE-ENABLE them (they return!)
-    foreach (var e in enemies)
-    {
-        if (e != null)
-            e.gameObject.SetActive(true);
-    }
-
-    // ⬇️ EXTRA PART: spawn +2 enemies (or whatever extraEnemiesPerUse is) each time
-
-    // Use the first valid enemy as a template to clone
-    EnemyChaser template = null;
-    foreach (var e in enemies)
-    {
-        if (e != null)
-        {
-            template = e;
-            break;
-        }
-    }
-
-    if (template != null && extraEnemiesPerUse > 0)
-    {
-        for (int i = 0; i < extraEnemiesPerUse; i++)
-        {
-            // Pick a random existing spawn position
-            Vector3 basePos = spawnPositions[Random.Range(0, spawnPositions.Count)];
-
-            // Small random offset so they don’t all stack on top of each other
-            Vector2 offset2D = Random.insideUnitCircle * 1.5f;
-            Vector3 spawnPos = basePos + new Vector3(offset2D.x, offset2D.y, 0f);
-
-            GameObject clone = Instantiate(template.gameObject, spawnPos, Quaternion.identity);
-            clone.SetActive(true);
-
-            var ch = clone.GetComponent<EnemyChaser>();
-            if (ch != null && player != null)
-                ch.player = player.transform;
-        }
-    }
-
-    _nukeBusy = false;
-}
 
 
     bool IsUIBlockingInput()
@@ -460,21 +514,41 @@ if (LevelManager.I != null && LevelManager.I.savedState != null)
         FreezeAllEnemies(true);
     }
 
-    public void ResetCoinsToOriginalPositions()
-    {
-        var existingCoins = FindObjectsOfType<Coin>();
-        foreach (var coin in existingCoins)
-            if (coin != null) Destroy(coin.gameObject);
+    // public void ResetCoinsToOriginalPositions()
+    // {
+    //     var existingCoins = FindObjectsOfType<Coin>();
+    //     foreach (var coin in existingCoins)
+    //         if (coin != null) Destroy(coin.gameObject);
 
-        if (_baselineCoinPositions.Count > 0 && _coinTemplateHiddenClone != null)
-        {
-            for (int i = 0; i < _baselineCoinPositions.Count; i++)
-            {
-                var coin = Instantiate(_coinTemplateHiddenClone, _baselineCoinPositions[i], Quaternion.identity);
-                coin.name = "Coin";
-                coin.SetActive(true);
-            }
-        }
-        totalCoins = _baselineCoinPositions.Count;
+    //     if (_baselineCoinPositions.Count > 0 && _coinTemplateHiddenClone != null)
+    //     {
+    //         for (int i = 0; i < _baselineCoinPositions.Count; i++)
+    //         {
+    //             var coin = Instantiate(_coinTemplateHiddenClone, _baselineCoinPositions[i], Quaternion.identity);
+    //             coin.name = "Coin";
+    //             coin.SetActive(true);
+    //         }
+    //     }
+    //     totalCoins = _baselineCoinPositions.Count;
+    // }
+    public void ResetCoinsToOriginalPositions()
+{
+    // Remove old coins
+    foreach (var coin in FindObjectsOfType<Coin>())
+        Destroy(coin.gameObject);
+
+    // Safety: If template missing, do nothing
+    if (_coinTemplateHiddenClone == null) return;
+
+    // Re-spawn coins in original spots
+    foreach (var pos in _baselineCoinPositions)
+    {
+        var newCoin = Instantiate(_coinTemplateHiddenClone, pos, Quaternion.identity);
+        newCoin.name = "Coin";
+        newCoin.SetActive(true);
     }
+
+    totalCoins = _baselineCoinPositions.Count;
+    coinsCollected = 0;
+}
 }
