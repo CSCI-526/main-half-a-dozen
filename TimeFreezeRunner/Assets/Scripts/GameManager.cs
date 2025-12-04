@@ -312,7 +312,7 @@ if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
 
                 if (enemyWipeHintText != null)
                 {
-                    enemyWipeHintText.text = "Press SHIFT to use free Enemy Wipe!";
+                    enemyWipeHintText.text = "Press SHIFT to use Enemy Wipe!";
                     enemyWipeHintText.gameObject.SetActive(true);
                 }
                 if (player != null)
@@ -331,8 +331,12 @@ if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
                     {
                         _enemyWipeTutorialPending = false;
                         _enemyWipeTutorialLocked = false;
+                        // change the center hint instead of hiding it
                         if (enemyWipeHintText != null)
-                            enemyWipeHintText.gameObject.SetActive(false);
+                        {
+                            enemyWipeHintText.text = "Trial use. Next uses add more enemies.";
+                            enemyWipeHintText.gameObject.SetActive(true);
+                        }
 
                         // Remember globally that the player has learned Enemy Wipe
                         if (LevelManager.I != null)
@@ -344,7 +348,7 @@ if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
 
                         // Enemies will be destroyed by the wipe anyway; new ones will spawn active
                         StartCoroutine(NukeEnemiesAndRespawn_Tutorial());
-                        ui?.ShowIdleToast("Enemy Wipe: free try. Next uses add enemies.");
+                        
                         Debug.Log("💥 Enemy Wipe tutorial (free) triggered with Shift!");
                     }
                     else if (currentNukeUses >= maxNukeUses)
@@ -634,12 +638,30 @@ if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
 
         float elapsed = 0f;
         bool ghostsSpawned = false;
+        bool infoCleared = false;
+        const float tutorialInfoSeconds = 1.5f;
         while (elapsed < killDurationSeconds)
         {
             elapsed += Time.deltaTime;
             float remaining = killDurationSeconds - elapsed;
 
-            UpdateEnemyWipeCountdown(remaining);
+            if (elapsed >= tutorialInfoSeconds)
+            {
+                if (!infoCleared)
+                {
+                    if (enemyWipeHintText != null)
+                        enemyWipeHintText.gameObject.SetActive(false);
+
+                    infoCleared = true;
+                }
+                // now show the remaining countdown (e.g. 3..2..1)
+                UpdateEnemyWipeCountdown(remaining);
+            }
+            else
+            {
+                // first 1.5s: no countdown text
+                UpdateEnemyWipeCountdown(0f);
+            }
 
             if (!ghostsSpawned && remaining <= warningLeadTimeSeconds)
             {
