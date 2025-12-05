@@ -438,6 +438,14 @@ if (LevelManager.I != null && LevelManager.I.currentLevel == 3)
 
     public void Restart()
     {
+        // string currentScene = SceneManager.GetActiveScene().name;
+        // SceneManager.LoadScene(currentScene);
+        if (LevelManager.I != null)
+        {
+            LevelManager.I.switchesUsed = 0;                   // reset runtime counter
+            LevelManager.I.savedState.switchesUsed = 0;        // reset saved counter
+        }
+
         string currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentScene);
     }
