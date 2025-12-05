@@ -7,7 +7,11 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector] 
 public bool hasSeenLevel1Tutorial = false;
-    public static LevelManager I;
+// NEW: remember if Enemy Wipe tutorial in Level 3 has been completed at least once
+[HideInInspector]
+public bool hasSeenEnemyWipeTutorial = false;
+
+public static LevelManager I;
 
     [Header("Completion Flags")]
     public bool allLevelsCompleted = false;
@@ -15,6 +19,8 @@ public bool hasSeenLevel1Tutorial = false;
     [Header("Progress Tracking")]
     public int currentLevel = 1;
     public bool darkMazeCleared = false;
+
+    public int switchesUsed;
 
     [System.Serializable]
     public class PlayerState
@@ -25,6 +31,8 @@ public bool hasSeenLevel1Tutorial = false;
         public string lastScene;
         public string nextScene;
         public bool allCoinsCollected;
+
+        public int switchesUsed;
     }
 
     public PlayerState savedState = new PlayerState();
@@ -42,6 +50,10 @@ public bool hasSeenLevel1Tutorial = false;
 
     public void OnLevelComplete()
     {
+        if (currentLevel == 1)
+        {
+            hasSeenLevel1Tutorial = true;
+        }
         Debug.Log($"✅ Level {currentLevel} complete!");
         UILevelPanel.ShowComplete(currentLevel);
         StartCoroutine(LoadNextLevelAfterDelay(2f));
@@ -56,25 +68,51 @@ public bool hasSeenLevel1Tutorial = false;
 
         if (currentLevel == 1)
             nextScene = "MainForLevel2";
+        // else if (currentLevel == 2)
+        // {
+        //     nextScene = "MainForLevel3";
+        //     allLevelsCompleted = true; 
+        // }
         else if (currentLevel == 2)
-        {
-            nextScene = "MainForLevel3";
-            allLevelsCompleted = true; 
-        }
+{
+    nextScene = "MainForLevel3";
+    allLevelsCompleted = true;
+
+    // FULL RESET for Level 3 start
+    savedState = new PlayerState();   // wipe saved state entirely
+    darkMazeCleared = false;
+    switchesUsed = 0;
+
+    Debug.Log("🧹 Resetting state for a clean Level 3 start.");
+}
         else
         {
             Debug.Log("🎉 All levels finished!");
             yield break;
         }
 
-        if (currentLevel == 2 && savedState != null)
-        {
-            savedState.coinsCollected = 0;
-            savedState.allCoinsCollected = false;
-            savedState.exitUnlocked = false;   
-            savedState.lastScene = "";      
-            savedState.nextScene = "";
-        }
+        // if (currentLevel == 2 && savedState != null)
+        // {
+        //     savedState.coinsCollected = 0;
+        //     savedState.allCoinsCollected = false;
+        //     savedState.exitUnlocked = false;
+        //     savedState.lastScene = "";
+        //     savedState.nextScene = "";
+
+        //     if(savedState != null)
+        //     {
+        //         savedState.switchesUsed = 0;
+        //     }
+        // }
+        if (currentLevel == 1)
+{
+    // Full reset of Level-2 progress
+    savedState = new PlayerState();
+    darkMazeCleared = false;
+    switchesUsed = 0;
+
+    Debug.Log("🧹 Resetting all Level-2 state — safe fresh start.");
+}
 
         Debug.Log($"➡️ Loading next scene: {nextScene}");
         SceneManager.sceneLoaded += (scene, mode) =>
